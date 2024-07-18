@@ -9,7 +9,3 @@ python-docx==1.1.2
 pywin32==306
 pywinstyles==1.8
 requests==2.32.3
-shiboken6==6.7.2
-typing_extensions==4.12.2
-urllib3==2.2.2
-wheel==0.43.0
