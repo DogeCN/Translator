@@ -13,7 +13,7 @@ def main():
     fr = 'res/running'
     try:
         lines = open(fr).readlines()
-        running = lines[0] == 'True\n' and len(lines) < 2
+        running = lines[0] == 'True\n' and len(lines) < 2 and time.time() - os.path.getmtime(fr) < 1
     except: running = False
     if running:
         if argv:  open(fr, 'a').write(f'{argv}\n')
