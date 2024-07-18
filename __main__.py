@@ -11,9 +11,10 @@ print('Starting...', 'Green', 'Bold')
 def main():
     argv = sys.argv[1] if len(sys.argv) > 1 else None
     fr = 'res/running'
+    difftime = time.time() - os.path.getatime(fr)
     try:
         lines = open(fr).readlines()
-        running = lines[0] == 'True\n' and len(lines) < 2 and time.time() - os.path.getmtime(fr) < 1
+        running = lines[0] == 'True\n' and difftime < 1
     except: running = False
     if running:
         if argv:  open(fr, 'a').write(f'{argv}\n')
