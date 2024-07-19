@@ -1,4 +1,4 @@
-import sys, time, os
+import sys, time, os, ctypes, winreg
 from res import version
 from logic import LogicFrame
 from libs.stdout import print
@@ -25,10 +25,22 @@ def main():
     Frame = LogicFrame(argv)
     sys.exit(Frame.exec())
 
+def register(): #For PyInstaller Exe
+    try:
+        winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf').Close()
+    except:
+        if __file__.endswith('.exe'):
+            sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf\\shell')
+            winreg.SetValue(sub_key, 'open\\command', winreg.REG_SZ, f'{os.path.abspath(__file__)} %1')
+            winreg.SetValue(sub_key, 'DefaultIcon', winreg.REG_SZ, os.path.abspath('res/icon.ico'))
+            ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
+            print('.TVF Registered', 'Green')
+
 if Debug:
     main()
 else:
-    for retry in range(5):
+    register()
+    for retry in range(1, 6):
         try: main()
         except Exception as e:
             print(f'Error: {e}', 'Red', 'Bold')

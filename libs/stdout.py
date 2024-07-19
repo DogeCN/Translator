@@ -1,5 +1,10 @@
 import sys, time
 
+stdout = sys.stdout
+log = 'res/latest.log'
+
+open(log, 'w').close()
+
 Attr = {
     'Reset': 0,
     'Bold': 1,
@@ -23,4 +28,5 @@ _getstamp = lambda f:time.strftime(f, time.localtime())
 def print(rstr:str, *attr):
     fstr = '\033[%sm'
     attr = ';'.join([str(Attr[a]) for a in attr])
-    sys.stdout.write(f"{fstr%attr}{rstr}{fstr%Attr['Reset']}\n")
+    if stdout: stdout.write(f"{fstr%attr}{rstr}{fstr%Attr['Reset']}\n")
+    else: open(log, 'a', encoding='utf-8').write(_getstamp('[%H:%M:%S] ')+rstr)
