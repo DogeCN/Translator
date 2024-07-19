@@ -3,7 +3,7 @@ from res import version
 from logic import LogicFrame
 from libs.stdout import print
 
-Debug = os.path.exists('res/DEBUG')
+Debug = os.path.exists('res/.DEBUG')
 
 print(f'Translator {version.Translator} By Doge', 'Yellow', 'Bold')
 print('Starting...', 'Green', 'Bold')
@@ -27,13 +27,11 @@ def main():
 
 def register(): #For PyInstaller Exe
     try:
-        winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, '.tvf').Close()
-    except:
-        if __file__.endswith('.py'):
-            winreg.SetValue(winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, '.tvf'), '', winreg.REG_SZ, 'Translator.TVF')
-            sub_key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Translator.TVF')
+        winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf\\shell').Close()
+    except WindowsError:
+        if __file__.endswith('.exe'):
+            sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf')
             winreg.SetValue(sub_key, 'shell\\open\\command', winreg.REG_SZ, f'{os.path.abspath(__file__)} %1')
-            winreg.SetValue(sub_key, 'DefaultIcon', winreg.REG_SZ, os.path.abspath('res/icon.ico'))
             ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
             print('.TVF Registered', 'Green')
 
