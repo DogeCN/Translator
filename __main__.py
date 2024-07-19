@@ -28,10 +28,10 @@ def main():
 if Debug:
     main()
 else:
-    while True:
+    for retry in range(5):
         try: main()
         except Exception as e:
             print(f'Error: {e}', 'Red', 'Bold')
             time.sleep(1)
-            print('Restarting...', 'Yellow', 'Bold')
+            print(f'Restarting... ({retry}/5)', 'Yellow', 'Bold')
         else: break
