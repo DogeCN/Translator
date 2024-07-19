@@ -14,7 +14,7 @@ class LogicFrame:
     def __init__(self, file=None):
         super().__init__()
         #Window Build
-        self.app = QApplication([])
+        self.app = QApplication()
         self.MainWindow = QMainWindow()
         self.ui = UILogic()
         self.ui.setupUi(self.MainWindow)
