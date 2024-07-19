@@ -45,7 +45,7 @@ class UILogic(Ui_MainWindow):
     def connect_actions(self):
         #Menu Actions
         self.actionNew.triggered.connect(lambda:self.Files.new())
-        self.actionReload.triggered.connect(lambda:(lambda item:(item.load() if item else self.load()) or self._display_file(item))(self.Files.current))
+        self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current))
         self.actionDict_Reload.triggered.connect(self.load_dicts)
         self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, 'Load Vocubulary File', './', '*.tvf')[0]))
         self.actionSave.triggered.connect(lambda:self.Files.current.save())

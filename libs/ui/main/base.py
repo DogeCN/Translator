@@ -133,9 +133,9 @@ class FItem(QtWidgets.QListWidgetItem):
     
     @file.setter
     def file(self, file:str):
-        self._file = file
-        self.name = file.split('\\')[-1]
-        self.setToolTip(file)
+        self._file = file.replace('\\', '/')
+        self.name = self.file.split('/')[-1]
+        self.setToolTip(self.file)
 
     @property
     def name(self):
@@ -198,7 +198,7 @@ class Files(BaseListWidget):
             for item in self.items:
                 if item.file == file:
                     item.load()
-                    return
+                    return item
             item = FItem(file)
             self.addItem(item)
             return item
