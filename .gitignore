@@ -156,6 +156,6 @@ cython_debug/
 Start.exe
 Start.bat
 *.tvf
-res/running
+*.DEBUG
 .source/
 python/

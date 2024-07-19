@@ -27,11 +27,12 @@ def main():
 
 def register(): #For PyInstaller Exe
     try:
-        winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf').Close()
+        winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, '.tvf').Close()
     except:
-        if __file__.endswith('.exe'):
-            sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf\\shell')
-            winreg.SetValue(sub_key, 'open\\command', winreg.REG_SZ, f'{os.path.abspath(__file__)} %1')
+        if __file__.endswith('.py'):
+            winreg.SetValue(winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, '.tvf'), '', winreg.REG_SZ, 'Translator.TVF')
+            sub_key = winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, 'Translator.TVF')
+            winreg.SetValue(sub_key, 'shell\\open\\command', winreg.REG_SZ, f'{os.path.abspath(__file__)} %1')
             winreg.SetValue(sub_key, 'DefaultIcon', winreg.REG_SZ, os.path.abspath('res/icon.ico'))
             ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
             print('.TVF Registered', 'Green')
