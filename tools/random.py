@@ -1,5 +1,4 @@
 from .base import *
-from PySide6.QtWidgets import QMenu
 from random import choice, randint
 
 def all(*args):
@@ -10,6 +9,9 @@ def all(*args):
         except: continue
         else: break
 
+def inbank():
+    tool.ui.ui.Word_Entry.setText(choice(tool.ui.ui.Bank.results).word)
+
 def retry():
     dicts = [d for d in dictionaries if d.enabled]
     dict = choice(dicts)
@@ -19,9 +21,6 @@ def retry():
 
 def choose(dict:dict):
     return list(dict.keys())[randint(0, len(dict)-1)]
-
-def inbank():
-    tool.ui.ui.Word_Entry.setText(choice(tool.ui.ui.Bank.results).word)
 
 tool1 = Tool()
 tool1.name = 'Random all'

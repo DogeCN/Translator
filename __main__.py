@@ -1,4 +1,4 @@
-import sys, time, winreg, os, ctypes
+import sys, time, os
 from res import version
 from logic import LogicFrame
 from libs.stdout import print
@@ -25,22 +25,9 @@ def main():
     Frame = LogicFrame(argv)
     sys.exit(Frame.exec())
 
-def register(): #Removed In Setup
-    rg = 'res/reg.1'
-    if os.path.exists(rg):
-        try:
-            sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf\\shell')
-            winreg.SetValue(sub_key, 'open\\command', winreg.REG_SZ, f'{os.path.abspath(open(rg).read())} %1')
-            winreg.SetValue(sub_key, 'Icon', winreg.REG_SZ, os.path.abspath('res/icon.ico'))
-            ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
-            os.remove(rg)
-            print('.TVF Registered', 'Green')
-        except Exception as e: print(f'Register Error: {e}', 'Red', 'Bold')
-
 if Debug:
     main()
 else:
-    register()
     while True:
         try: main()
         except Exception as e:
