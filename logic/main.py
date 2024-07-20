@@ -40,8 +40,6 @@ class UILogic(Ui_MainWindow):
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
         self.raw.setStyleSheet('background-color: rgb(30, 30, 30);color: rgb(170, 130, 130)')
-        self.Bank.lang = Setting.Language
-        self.Detail.lang = Setting.Language
         self.connect_actions()
     
     def connect_actions(self):
@@ -88,8 +86,8 @@ class UILogic(Ui_MainWindow):
     def result(self, result:Result):
         self._result = result
         word = result.word
-        self.Translated_text.setText(result.get_translation(Setting.Language))
-        self.Translated_text.setToolTip(result.get_definition(Setting.Language))
+        self.Translated_text.setText(result.translation)
+        self.Translated_text.setToolTip(result.expect[1])
         self.Info.setText(result.info)
         if word in self.Bank.words or not result:
             self.Add.setEnabled(False)
