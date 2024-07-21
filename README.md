@@ -20,6 +20,7 @@
 
  - Base translate / correct function \
   ![Translate](https://github.com/user-attachments/assets/e540593d-605f-4974-a0fa-a2402e8d6bb1 "Translate")
+  ![image](https://github.com/user-attachments/assets/85d95365-e03b-45b8-9199-0a6e9ce23f20)
   ![Correct](https://github.com/user-attachments/assets/3c52cfbd-f210-424b-b793-e94e2db5e09b "Correct")
 
  - Generate documents (using `python-docx` lib) \
