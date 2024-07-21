@@ -111,6 +111,8 @@ class LogicFrame:
             translator.load('./res/lang/zh.qm')
             self.ui.retranslateUi(self.MainWindow)
             self.app.removeTranslator(translator)
+        self.ui.Bank.lang = Setting.Language
+        self.ui.Detail.lang = Setting.Language
         self.MainWindow.setWindowTitle(f'{self.MainWindow.windowTitle()} {version.Translator}')
         self.show_tools()
 

@@ -20,6 +20,20 @@ class Result:
     def translation(self, translation):
         self.expect[2] = translation
 
+    def get_translation(self, lang):
+        return self.definition if lang else self.translation
+
+    @property
+    def definition(self):
+        return self.expect[1]
+
+    @definition.setter
+    def definition(self, definition):
+        self.expect[1] = definition
+
+    def get_definition(self, lang):
+        return self.translation if lang else self.definition
+
     @property
     def detail(self):
         words = []
@@ -46,9 +60,8 @@ class Result:
         return self.word == value
     
     def get_tip(self, lang):
-        trans_html = self.expect[2].replace('\n', '<br>')
-        if lang: htip = 'Do you mean %s: '
-        else: htip = '你是否在找 %s: '
+        trans_html = self.get_translation(lang).replace('\n', '<br>')
+        htip = 'Do you mean %s: ' if lang else '你是否在找 %s: '
         return f'<html><body><p><span style=" font-size:11pt; font-weight:600;">{htip%self.word}</span style=" font-size:10pt"></p><p>{trans_html}</p></body></html>'
 
 def fast(func):

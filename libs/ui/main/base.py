@@ -17,13 +17,22 @@ class BaseListWidget(QtWidgets.QListWidget):
         self.update()
 
 class LItem(QtWidgets.QListWidgetItem):
-    def __init__(self, result:Result):
+    def __init__(self, result:Result, lang):
         super().__init__(result.word)
-        self.setToolTip(result.translation)
         self.word = result.word
         self.setBackground(QtGui.QColor(255, 100, 100, 30) if result.online else QtGui.QColor(100, 255, 255, 30))
         self.result = result
+        self.lang = lang
         self.update()
+
+    @property
+    def lang(self):
+        return self._lang
+    
+    @lang.setter
+    def lang(self, lang):
+        self._lang = lang
+        self.setToolTip(self.result.get_translation(lang))
 
     @property
     def top(self):
@@ -38,7 +47,7 @@ class LItem(QtWidgets.QListWidgetItem):
         self.setText('*'+self.word if self.top else self.word)
 
     def __str__(self):
-        return self.result.translation
+        return self.result.get_translation(self.lang)
 
 class Bank(BaseListWidget):
 
@@ -56,7 +65,7 @@ class Bank(BaseListWidget):
             if result in self.results:
                 self.roll(result.word)
                 return
-            item = LItem(result)
+            item = LItem(result, self.lang)
             self.addItem(item)
             self.scrollToItem(item, TOP)
         
@@ -78,6 +87,16 @@ class Bank(BaseListWidget):
     def clear(self):
         super().clear()
         self.update()
+
+    @property
+    def lang(self):
+        return self._lang
+    
+    @lang.setter
+    def lang(self, lang):
+        self._lang = lang
+        for i in self.items:
+            i.lang = lang
 
     @property
     def items(self) -> list[LItem]:
@@ -108,7 +127,7 @@ class Bank(BaseListWidget):
     
     @results.setter
     def results(self, results):
-        self.items = [LItem(i) for i in results]
+        self.items = [LItem(i, self.lang) for i in results]
 
     @property
     def words(self):

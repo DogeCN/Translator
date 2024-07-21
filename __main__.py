@@ -26,14 +26,12 @@ def main():
     sys.exit(Frame.exec())
 
 def register(): #For PyInstaller Exe
-    try:
-        winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf\\shell').Close()
-    except WindowsError:
-        if __file__.endswith('.exe'):
-            sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf')
-            winreg.SetValue(sub_key, 'shell\\open\\command', winreg.REG_SZ, f'{os.path.abspath(__file__)} %1')
-            ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
-            print('.TVF Registered', 'Green')
+    file = sys.argv[0]
+    if file.endswith('.exe'):
+        sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf')
+        winreg.SetValue(sub_key, 'shell\\open\\command', winreg.REG_SZ, f'"{file}" "%1"')
+        ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
+        print('.TVF Registered', 'Green')
 
 if Debug:
     main()

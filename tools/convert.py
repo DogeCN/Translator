@@ -16,6 +16,7 @@ def main(*args):
         tool.Error(f'Error: {e}')
 
 def process():
+    from libs.config import Setting
     document = Document()
     section = document.sections[0]
     path = section._sectPr.xpath('./w:cols')[0]
@@ -35,7 +36,7 @@ def process():
     for result in io.read_vocabulary():
         info = result.info
         head = f'{result.word} /{info}/' if info else result.word
-        p = document.add_paragraph(f'{head}\n{result.translation}')
+        p = document.add_paragraph(f'{head}\n{result.get_translation(Setting.Language)}')
         p.paragraph_format.line_spacing = Pt(10)
         p.paragraph_format.space_after = Pt(5)
     return document
