@@ -3,7 +3,7 @@ import sys, time
 stdout = sys.stdout
 log = 'res/latest.log'
 
-open(log, 'w').close()
+if not stdout: open(log, 'w').close()
 
 Attr = {
     'Reset': 0,
@@ -29,4 +29,4 @@ def print(rstr:str, *attr):
     fstr = '\033[%sm'
     attr = ';'.join([str(Attr[a]) for a in attr])
     if stdout: stdout.write(f"{fstr%attr}{rstr}{fstr%Attr['Reset']}\n")
-    else: open(log, 'a', encoding='utf-8').write(_getstamp('[%H:%M:%S] ')+rstr)
+    else: open(log, 'a', encoding='utf-8').write(f"{_getstamp('[%H:%M:%S]')} {rstr}\n")
