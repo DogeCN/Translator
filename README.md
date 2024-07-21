@@ -4,7 +4,7 @@
 ### Backstory
  In my quest of *4000 Essential Words* , I grappled with unfamiliar terms that were hard to comprehend and summarize. Hence, the idea for this app blossomed.
  I recallimg the torturous dictionary loading phase but today, everything's smooth sailing: correcting errors, batch processing, even printing them out. A notable enhancement indeed!
- Along the way, countless words swimming around in my head——more than 300, to be precise. Thanks for sticking with me these past few months! And also supports from community.
+ Along the way, countless words swimming around in my head —— more than 300, to be precise. Thanks for sticking with me these past few months! And also supports from community.
 
 ### How to Use
  This project is mainly using PySide6 to create user interface.
@@ -20,7 +20,7 @@
 
  - Base translate / correct function \
   ![Translate](https://github.com/user-attachments/assets/e540593d-605f-4974-a0fa-a2402e8d6bb1 "Translate")
-  ![image](https://github.com/user-attachments/assets/85d95365-e03b-45b8-9199-0a6e9ce23f20)
+  ![Translate (English)](https://github.com/user-attachments/assets/85d95365-e03b-45b8-9199-0a6e9ce23f20 "Translate (English)")
   ![Correct](https://github.com/user-attachments/assets/3c52cfbd-f210-424b-b793-e94e2db5e09b "Correct")
 
  - Generate documents (using `python-docx` lib) \
