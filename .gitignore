@@ -154,7 +154,6 @@ dmypy.json
 cython_debug/
 
 
-Start.bat
 *.tvf
 *.DEBUG
 .source/
