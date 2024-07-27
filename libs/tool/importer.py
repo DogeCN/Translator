@@ -21,9 +21,10 @@ def dynamic_get():
     return Tools
 
 def static_get():
-    from tools import batch, convert, random
+    from tools import batch, convert, random, mix
     return {
         'batch': batch.tool,
         'convert': convert.tool,
         'random': random.tool,
+        'mix': mix.tool,
     }
