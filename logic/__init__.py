@@ -49,13 +49,22 @@ class LogicFrame:
         Thread(target=self.auto_translate).start()
         self.auto_save_timer = self.ticker(lambda:self.ui.save_all() if not self.tool_thread.is_alive() and Setting.Auto_save else ..., Setting.Auto_save_interval*1000)
         self.ticker(lambda:self.ui.actionRun.setEnabled(not self.tool_thread.is_alive()), 500)
-        self.ticker(lambda:(lambda f:(self.ui.load(f) if f!='Show\n' else ...) or (self.MainWindow.activateWindow() or self.MainWindow.showNormal()) if f else ...)(open('res/running').read().split('\n')[1]) or open('res/running', 'w').write('True\n'), 500)
+        self.ticker(self.check_running, 500)
 
     def ticker(self, func, interval):
         timer = QTimer(self.MainWindow)
         timer.timeout.connect(func)
         timer.start(interval)
         return timer
+
+    def check_running(self):
+        action = open('res/running').read().split('\n')[1]
+        if action:
+            if action != 'Show':
+                self.ui.load(action)
+            self.MainWindow.activateWindow()
+            self.MainWindow.showNormal()
+        open('res/running', 'w').write('True\n')
 
     def accept(self):
         Setting.Auto_save = self.setting_ui.Auto_Save.isChecked()

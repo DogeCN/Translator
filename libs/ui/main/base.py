@@ -143,7 +143,6 @@ class FItem(QtWidgets.QListWidgetItem):
     def __init__(self, file:str):
         super().__init__()
         self.file = os.path.abspath(file).capitalize()
-        self.setText(self.name)
         self.setBackground(QtGui.QColor(255, 100, 255, 30))
     
     @property
@@ -213,7 +212,7 @@ class Files(BaseListWidget):
         if isinstance(file, list):
             return [self.load(f) for f in file]
         else:
-            file = os.path.abspath(file).capitalize()
+            file = os.path.abspath(file).replace('\\', '/').capitalize()
             for item in self.items:
                 if item.file == file:
                     item.load()
