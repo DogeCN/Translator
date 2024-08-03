@@ -10,7 +10,8 @@ def all(*args):
         else: break
 
 def inbank():
-    tool.ui.ui.Word_Entry.setText(choice(tool.ui.ui.Bank.results).word)
+    Bank = tool.ui.ui.Bank
+    Bank.current = choice(Bank.items)
 
 def retry():
     dicts = [d for d in dictionaries if d.enabled]

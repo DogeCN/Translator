@@ -8,7 +8,7 @@ class Ui_MainWindow:
     def setupUi(self, MainWindow:QMainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(553, 356)
+        MainWindow.resize(550, 350)
         icon = QIcon()
         icon.addFile(u":/img/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -129,6 +129,8 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Bank, 0, 2, 5, 1)
 
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.Translated_text = QLabel(self.centralwidget)
         self.Translated_text.setObjectName(u"Translated_text")
         self.Translated_text.setMinimumSize(QSize(0, 117))
@@ -136,7 +138,20 @@ class Ui_MainWindow:
         self.Translated_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.Translated_text.setWordWrap(True)
 
-        self.gridLayout.addWidget(self.Translated_text, 1, 0, 3, 1)
+        self.verticalLayout.addWidget(self.Translated_text)
+
+        self.Info = QLabel(self.centralwidget)
+        self.Info.setObjectName(u"Info")
+        self.Info.setMinimumSize(QSize(172, 42))
+        self.Info.setMaximumSize(QSize(16777215, 42))
+        self.Info.setStyleSheet(u"QLabel{font: 700 12pt;color: rgb(255, 170, 0);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(255, 170, 0);}")
+        self.Info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.Info.setWordWrap(True)
+
+        self.verticalLayout.addWidget(self.Info)
+
+
+        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 4, 1)
 
         self.Top = QPushButton(self.centralwidget)
         self.Top.setObjectName(u"Top")
@@ -174,16 +189,6 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Detail, 3, 1, 1, 1)
 
-        self.Info = QLabel(self.centralwidget)
-        self.Info.setObjectName(u"Info")
-        self.Info.setMinimumSize(QSize(172, 42))
-        self.Info.setMaximumSize(QSize(16777215, 42))
-        self.Info.setStyleSheet(u"QLabel{font: 700 12pt;color: rgb(255, 170, 0);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(255, 170, 0);}")
-        self.Info.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.Info.setWordWrap(True)
-
-        self.gridLayout.addWidget(self.Info, 4, 0, 1, 1)
-
         self.Files = Files(self.centralwidget, self.Bank)
         self.Files.setObjectName(u"Files")
         self.Files.setMinimumSize(QSize(128, 51))
@@ -199,8 +204,8 @@ class Ui_MainWindow:
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 553, 33))
-        self.menuBar.setStyleSheet(u"QMenu{background-color: rgba(30, 30, 30, 100);border-radius:5px;}")
+        self.menuBar.setGeometry(QRect(0, 0, 550, 33))
+        self.menuBar.setStyleSheet(u"QMenu{background-color: rgba(30, 30, 30, 100);border-radius:10px;}")
         self.menuFile = QMenu(self.menuBar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuFile.setToolTipsVisible(False)
@@ -302,12 +307,12 @@ class Ui_MainWindow:
         self.Bank.setStatusTip(QCoreApplication.translate("MainWindow", u"Vocabulary Bank", None))
         self.Translated_text.setStatusTip(QCoreApplication.translate("MainWindow", u"Translations", None))
         self.Translated_text.setText("")
+        self.Info.setStatusTip(QCoreApplication.translate("MainWindow", u"Infomations", None))
         self.Top.setStatusTip(QCoreApplication.translate("MainWindow", u"Top the Words", None))
         self.Top.setText(QCoreApplication.translate("MainWindow", u"Top", None))
         self.Delete.setStatusTip(QCoreApplication.translate("MainWindow", u"Delete the Words", None))
         self.Delete.setText(QCoreApplication.translate("MainWindow", u" Delete", None))
         self.Detail.setStatusTip(QCoreApplication.translate("MainWindow", u"Detail", None))
-        self.Info.setStatusTip(QCoreApplication.translate("MainWindow", u"Infomations", None))
         self.Files.setStatusTip(QCoreApplication.translate("MainWindow", u"Files", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuTools.setTitle(QCoreApplication.translate("MainWindow", u"Tools", None))

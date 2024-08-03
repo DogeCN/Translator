@@ -120,6 +120,7 @@ class Bank(BaseListWidget):
     @current.setter
     def current(self, item:LItem):
         self.setCurrentItem(item)
+        self.scrollToItem(item, TOP)
 
     @property
     def results(self):

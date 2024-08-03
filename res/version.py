@@ -1,8 +1,8 @@
-Translator = 'v1.14.3'
-Tools = 'v0.25'
+Translator = 'v1.14.5'
+Tools = 'v0.27'
 
-Readme_zh = r'''
-Translator(翻译器) v1.14.3
+Readme_zh = fr'''
+Translator(翻译器) {Translator}
 这是一个简单的本地翻译系统
 
 背景故事:
@@ -26,8 +26,8 @@ tools文件夹中提供了一些示例插件，目前插件系统还算完善，
 作者QQ: Doge(3269515690)
 '''
 
-Readme_en = r'''
-Translator v1.14.3
+Readme_en = fr'''
+Translator {Translator}
 Simple locale translation tool at your service.
 
 Backstory:
