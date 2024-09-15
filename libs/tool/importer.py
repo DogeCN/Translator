@@ -24,7 +24,7 @@ def static_get():
     from tools import batch, convert, random, mix
     return {
         'batch': batch.tool,
-        'convert': convert.tool,
         'random': random.tool,
+        'convert': convert.tool,
         'mix': mix.tool,
     }
