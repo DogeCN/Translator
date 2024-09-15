@@ -8,7 +8,7 @@ from libs.translate import Result
 from libs.config import Setting
 from win32com.client import Dispatch
 from threading import Thread
-from res import version
+import webbrowser
 
 class UISignal(QObject):
     set_result_singal = Signal()
@@ -56,7 +56,7 @@ class UILogic(Ui_MainWindow):
         self.actionRemove.triggered.connect(self.Files.remove)
         self.actionClear.triggered.connect(self.Files.clear)
         self.actionExit.triggered.connect(self.parent.close)
-        self.actionAbout.triggered.connect(lambda:QMessageBox.about(self.raw, 'Translator' if Setting.Language else '翻译器' + version.Translator, version.Readme_zh if not Setting.Language else version.Readme_en))
+        self.actionAbout.triggered.connect(lambda:webbrowser.open('github.com/DogeCN/Translator'))
         self.actionAboutQt.triggered.connect(lambda:QMessageBox.aboutQt(self.raw))
         #Button Actions
         self.Add.clicked.connect(self.command_add)
