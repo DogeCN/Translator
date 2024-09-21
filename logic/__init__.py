@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog as QFile
-from PySide6.QtCore import QTranslator, QTimer
+from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QSystemTrayIcon, QFileDialog as QFile
+from PySide6.QtCore import QTranslator, QTimer, QEvent
 from libs.translate import translate, online_translate
 from libs.config import Setting
 from libs.tool import main as tool_main, load
@@ -18,7 +18,9 @@ class LogicFrame:
         self.MainWindow = QMainWindow()
         self.ui = UILogic()
         self.ui.setupUi(self.MainWindow)
+        self.tray = QSystemTrayIcon(self.ui.icon, self.MainWindow)
         self.MainWindow.show()
+        self.tray.show()
         #Setting
         self.setting = QDialog(self.MainWindow)
         self.setting_ui = Ui_Settings()
@@ -29,6 +31,8 @@ class LogicFrame:
         self.running = True
         #Connections
         self.MainWindow.closeEvent = self.close
+        self.MainWindow.changeEvent = lambda e: self.close(e) if self.MainWindow.isMinimized() else ...
+        self.tray.activated.connect(self.tray_activated)
         self.ui.actionSetting.triggered.connect(self.setting_show)
         self.ui.actionOnline.triggered.connect(self.command_online)
         self.ui.actionRun.triggered.connect(lambda:self.start_tool() if not self.tool_thread.is_alive() else ...)
@@ -65,6 +69,14 @@ class LogicFrame:
             self.MainWindow.activateWindow()
             self.MainWindow.showNormal()
         open('res/running', 'w').write('True\n')
+
+    def tray_activated(self, reason):
+        match reason:
+            case QSystemTrayIcon.ActivationReason.Trigger:
+                self.MainWindow.activateWindow()
+                self.MainWindow.showNormal()
+            case QSystemTrayIcon.ActivationReason.Context:
+                self.ui.close()
 
     def accept(self):
         Setting.Auto_save = self.setting_ui.Auto_Save.isChecked()
@@ -122,27 +134,30 @@ class LogicFrame:
             self.app.removeTranslator(translator)
         self.ui.Bank.lang = Setting.Language
         self.ui.Detail.lang = Setting.Language
-        self.MainWindow.setWindowTitle(f'{self.MainWindow.windowTitle()} {version.Translator}')
+        title = f'{self.MainWindow.windowTitle()} {version.Translator}'
+        self.MainWindow.setWindowTitle(title)
+        self.tray.setToolTip(title)
         self.show_tools()
 
     def auto_translate(self):
         tick = 0
         while self.running:
             #Auto Translate
-            ticking = tick > 20
-            if self.ui.text_changed or ticking:
-                tick = 0
-                self.ui.text_changed = False
-                word = self.ui.Word_Entry.text().strip()
-                if word != '':
-                    if (not ticking) and (word not in self.ui.Bank.words):
-                        self.ui.Bank.roll(word)
-                    self.ui._result = online_translate(word, self.ui.Bank.results) if self.online else translate(word, self.ui.Bank.results)
-                    if self.ui.text_changed:
-                        continue
-                    self.ui.signal.set_result_singal.emit()
-            tick += 1
-            sleep(0.05)
+            if self.MainWindow.isVisible():
+                ticking = tick > 20
+                if self.ui.text_changed or ticking:
+                    tick = 0
+                    self.ui.text_changed = False
+                    word = self.ui.Word_Entry.text().strip()
+                    if word != '':
+                        if (not ticking) and (word not in self.ui.Bank.words):
+                            self.ui.Bank.roll(word)
+                        self.ui._result = online_translate(word, self.ui.Bank.results) if self.online else translate(word, self.ui.Bank.results)
+                        if self.ui.text_changed:
+                            continue
+                        self.ui.signal.set_result_singal.emit()
+                tick += 1
+                sleep(0.05)
 
     def start_tool(self):
         self.tool_thread = Thread(target=tool_main, daemon=True)
@@ -150,9 +165,14 @@ class LogicFrame:
 
     def exec(self): return self.app.exec()
 
-    def close(self, *evt):
-        self.running = False
-        if Setting.Auto_save:
-            self.ui.save_all(False)
-        open('res/running', 'w').write('False\n')
-        
+    def close(self, evt:QEvent):
+        if self.ui.closing:
+            self.running = False
+            if Setting.Auto_save:
+                self.ui.save_all(False)
+            open('res/running', 'w').write('False\n')
+            evt.accept()
+        else:
+            self.MainWindow.hide()
+            evt.ignore()
+

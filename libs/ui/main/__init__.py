@@ -5,13 +5,15 @@ from .base import Bank, Files
 from . import _res
 
 class Ui_MainWindow:
+    def __init__(self):
+        self.icon = QIcon()
+        self.icon.addFile(u":/img/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+
     def setupUi(self, MainWindow:QMainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(550, 350)
-        icon = QIcon()
-        icon.addFile(u":/img/icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        MainWindow.setWindowIcon(icon)
+        MainWindow.setWindowIcon(self.icon)
         self.actionRun = QAction(MainWindow)
         self.actionRun.setObjectName(u"actionRun")
         icon1 = QIcon(QIcon.fromTheme(u"media-playback-start"))

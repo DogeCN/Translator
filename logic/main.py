@@ -23,6 +23,7 @@ class UILogic(Ui_MainWindow):
     _result = Result()
     signal = UISignal()
     dl_thread = Thread()
+    closing = False
     parent = None
     raw = None
 
@@ -32,6 +33,7 @@ class UILogic(Ui_MainWindow):
         self.dl_thread.start()
     def save_all(self, silent=True): [item.save() for item in self.Files.items if silent and item.exists()]
     def append(self, result): self.Bank.append(result); self.Files.keep()
+    def close(self): self.closing = True; self.parent.close()
     def remove(self): self.Bank.remove(); self.Files.keep()
     def top(self): self.Bank.top(); self.Files.keep()
 
@@ -55,7 +57,7 @@ class UILogic(Ui_MainWindow):
         self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, 'Save Vocubulary File', './', '*.tvf')[0]))
         self.actionRemove.triggered.connect(self.Files.remove)
         self.actionClear.triggered.connect(self.Files.clear)
-        self.actionExit.triggered.connect(self.parent.close)
+        self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(lambda:webbrowser.open('github.com/DogeCN/Translator'))
         self.actionAboutQt.triggered.connect(lambda:QMessageBox.aboutQt(self.raw))
         #Button Actions
