@@ -2,6 +2,13 @@ from ..base import *
 from libs.translate import translate
 from os import remove
 
+tr = {
+    'tip' : ('[请在此处输入单词]', '[Entry Your Words There]'),
+    'imported' : ("已导入 '%s'", "Imported '%s'"),
+    'corrected' : ('已更正:\n%s', 'Corrected:\n%s'),
+    'error' : ('错误: %s', 'Error: %s')
+}
+
 def main(*args):
     try:
         files = tool.OpenFiles(type='*.txt')
@@ -9,7 +16,7 @@ def main(*args):
             c = process(files)
         else:
             file = 'input.txt'
-            tip = '[Entry Your Words There]\nExample'
+            tip = tool.translate('tip')
             with open(file, 'w', encoding='utf-8') as f:
                 f.write(tip)
             tool.Pop(file).wait()
@@ -21,12 +28,12 @@ def main(*args):
             f.close(); files = [file]
             c = process(files)
         finfo = ', '.join(files)
-        tool.Show(f"Batched '{finfo}'")
+        tool.Show(tool.translate('imported') % finfo)
         if c:
-            info = '\n'.join([f"'{w}' to '{c[w]}'" for w in c])
-            tool.Show(f'Corrected:\n{info}')
+            info = '\n'.join([f"'{w}' -> '{c[w]}'" for w in c])
+            tool.Show(tool.translate('corrected') % info)
     except Exception as e:
-        tool.Error(f'Error: {e}')
+        tool.Error(tool.translate('error') % e)
 
 def process(files):
     corrected = {}
@@ -51,5 +58,6 @@ tool.name_zh = '导入'
 tool.doc = 'Import words file and batch translate to bank'
 tool.doc_zh = '导入单词并批量翻译'
 tool.action.shortcut = 'Ctrl+Alt+I'
+tool.tr = tr
 tool.entrance = main
 tool.attr = 'Purple', 'Bold'

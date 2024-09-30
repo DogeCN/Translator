@@ -10,9 +10,9 @@ class Action:
     visible = True
     enabled = True
     shortcut = ''
-    def __call__(self, lang):
-        action = QAction(self.tool.get_name(lang), self.tool.ui.MainWindow)
-        action.setStatusTip(self.tool.get_doc(lang))
+    def __call__(self):
+        action = QAction(self.tool.get_name(), self.tool.ui.MainWindow)
+        action.setStatusTip(self.tool.get_doc())
         action.setVisible(self.visible)
         action.setEnabled(self.enabled)
         action.setShortcut(self.shortcut)
@@ -24,13 +24,15 @@ class Menu:
     tools = [] #type: list[Tool]
     visible = True
     enabled = True
-    def __call__(self, lang):
-        for tool in self.tools: tool.ui = self.tool.ui
-        menu = QMenu(self.tool.get_name(lang), self.tool.ui.ui.menuBar)
+    def __call__(self):
+        for tool in self.tools:
+            tool.ui = self.tool.ui
+            tool.lang = self.tool.lang
+        menu = QMenu(self.tool.get_name(), self.tool.ui.ui.menuBar)
         menu.setVisible(self.visible)
         menu.setEnabled(self.enabled)
         for tool in self.tools:
-            action = tool.action(lang)
+            action = tool.action()
             action.setParent(menu)
             if tool.type: action.setMenu(action)
             else: menu.addAction(action)
@@ -45,7 +47,9 @@ class Tool:
     name_zh = ''
     doc = 'This is a new tool'
     doc_zh = ''
+    lang = 1
     help = 'No Argument Needed'
+    tr = {}
     entrance = None
     def __init__(self, type=0):
         self.type = type
@@ -55,15 +59,16 @@ class Tool:
         if self.entrance: self.entrance(*args)
         else: print(f"Can't find an entrance of the tool {self.name}", 'Red')
     #Get Info in Diffrent Languages
-    _get = lambda self, attr, lang:getattr(self, attr if lang else f'{attr}_zh')
-    def get_name(self, lang):
-        return self._get('name', lang)
-    def get_doc(self, lang):
-        return self._get('doc', lang)
+    def _get(self, attr):
+        return getattr(self, attr if self.lang else f'{attr}_zh')
+    def get_name(self):
+        return self._get('name')
+    def get_doc(self):
+        return self._get('doc')
     #Show Info to User
     def _msg(self, info, icon):
         msg = QMessageBox(self.ui.MainWindow)
-        msg.setWindowTitle(self.name)
+        msg.setWindowTitle(self.get_name())
         msg.setText(str(info))
         msg.setIcon(icon)
         return msg
@@ -90,6 +95,9 @@ class Tool:
     def SaveFile(self, title=None, dir='./', type=...):
         if not title: title = self.name
         return QFile.getSaveFileName(self.ui.MainWindow, title, dir, type)[0]
+    #Translate
+    def translate(self, key):
+        return self.tr[key][self.lang]
     @staticmethod
     def Pop(f):
         return Popen(f'"{f}"', shell=True)

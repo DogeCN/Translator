@@ -107,7 +107,8 @@ class LogicFrame:
         from libs.tool import Tools
         for tl in Tools.values():
             tl.ui = self
-            action = tl.action(Setting.Language)
+            tl.lang = Setting.Language
+            action = tl.action()
             if tl.type: self.ui.menuTools_Run.addMenu(action)
             else: self.ui.menuTools_Run.addAction(action)
 
