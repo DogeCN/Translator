@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QSystemTrayIcon, QFileDialog as QFile
+from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystemTrayIcon, QFileDialog as QFile
 from PySide6.QtCore import QTranslator, QTimer, QEvent
 from libs.translate import translate, online_translate
 from libs.config import Setting
@@ -19,6 +19,10 @@ class LogicFrame:
         self.ui = UILogic()
         self.ui.setupUi(self.MainWindow)
         self.tray = QSystemTrayIcon(self.ui.icon, self.MainWindow)
+        tmenu = QMenu(self.ui.raw)
+        tmenu.addAction(self.ui.actionExit)
+        tmenu.setStyleSheet('border-radius:5px;')
+        self.tray.setContextMenu(tmenu)
         self.MainWindow.show()
         self.tray.show()
         #Setting
@@ -71,12 +75,9 @@ class LogicFrame:
         open('res/running', 'w').write('True\n')
 
     def tray_activated(self, reason):
-        match reason:
-            case QSystemTrayIcon.ActivationReason.Trigger:
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
                 self.MainWindow.activateWindow()
                 self.MainWindow.showNormal()
-            case QSystemTrayIcon.ActivationReason.Context:
-                self.ui.close()
 
     def accept(self):
         Setting.Auto_save = self.setting_ui.Auto_Save.isChecked()
@@ -157,7 +158,7 @@ class LogicFrame:
                             continue
                         self.ui.signal.set_result_singal.emit()
                 tick += 1
-                sleep(0.05)
+            sleep(0.05)
 
     def start_tool(self):
         self.tool_thread = Thread(target=tool_main, daemon=True)
@@ -171,7 +172,7 @@ class LogicFrame:
             if Setting.Auto_save:
                 self.ui.save_all(False)
             open('res/running', 'w').write('False\n')
-            evt.accept()
+            self.app.quit()
         else:
             self.MainWindow.hide()
             evt.ignore()

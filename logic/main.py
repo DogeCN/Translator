@@ -41,7 +41,7 @@ class UILogic(Ui_MainWindow):
         super().setupUi(MainWindow)
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
-        self.raw.setStyleSheet('background-color: rgb(30, 30, 30);color: rgb(170, 130, 130)')
+        self.raw.setStyleSheet('background-color: rgb(30, 30, 30);')
         self.Bank.lang = Setting.Language
         self.Detail.lang = Setting.Language
         self.connect_actions()
