@@ -144,7 +144,7 @@ class LogicFrame:
         tick = 0
         while self.running:
             #Auto Translate
-            if self.MainWindow.isVisible():
+            if self.MainWindow.hasFocus():
                 ticking = tick > 20
                 if self.ui.text_changed or ticking:
                     tick = 0
@@ -158,7 +158,9 @@ class LogicFrame:
                             continue
                         self.ui.signal.set_result_singal.emit()
                 tick += 1
-            sleep(0.05)
+                sleep(0.05)
+            else:
+                sleep(0.5)
 
     def start_tool(self):
         self.tool_thread = Thread(target=tool_main, daemon=True)
