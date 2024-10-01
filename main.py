@@ -1,11 +1,11 @@
 import sys, time, os, ctypes, winreg
-from res import version
+from res import info
 from logic import LogicFrame
 from libs.stdout import print
 
 Debug = os.path.exists('res/.DEBUG')
 
-print(f'Translator {version.Translator} By Doge', 'Yellow', 'Bold')
+print(f'Translator {info.Translator} By Doge', 'Yellow', 'Bold')
 print('Starting...', 'Green', 'Bold')
 
 def main():

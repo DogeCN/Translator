@@ -49,7 +49,7 @@ class Tool:
     doc_zh = ''
     lang = 1
     help = 'No Argument Needed'
-    tr = {}
+    Tr = {}
     entrance = None
     def __init__(self, type=0):
         self.type = type
@@ -84,20 +84,20 @@ class Tool:
         return msg.exec() == QMessageBox.StandardButton.Yes
     #File Operation
     def OpenDir(self, title=None, dir='./'):
-        if not title: title = self.name
+        if not title: title = self.get_name()
         return QFile.getExistingDirectory(self.ui.MainWindow, title, dir)
     def OpenFile(self, title=None, dir='./', type=...):
-        if not title: title = self.name
+        if not title: title = self.get_name()
         return QFile.getOpenFileName(self.ui.MainWindow, title, dir, type)[0]
     def OpenFiles(self, title=None, dir='./', type=...):
-        if not title: title = self.name
+        if not title: title = self.get_name()
         return QFile.getOpenFileNames(self.ui.MainWindow, title, dir, type)[0]
     def SaveFile(self, title=None, dir='./', type=...):
-        if not title: title = self.name
+        if not title: title = self.get_name()
         return QFile.getSaveFileName(self.ui.MainWindow, title, dir, type)[0]
-    #Translate
-    def translate(self, key):
-        return self.tr[key][self.lang]
+    #Translate Tr Text
+    def getTr(self, key):
+        return self.Tr[key][self.lang]
     @staticmethod
     def Pop(f):
         return Popen(f'"{f}"', shell=True)

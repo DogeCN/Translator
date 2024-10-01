@@ -1,4 +1,5 @@
 from .io.base import load, dump
+from res.info import Tr
 import os
 
 data = os.getenv('AppData') + os.sep + 'setting.tsf'
@@ -15,6 +16,9 @@ class Settings:
             self.Key_Add = 'Ctrl+E'
             self.Key_Del = 'Del'
             self.Key_Top = 'Ctrl+T'
+
+    def getTr(self, key):
+        return Tr[key][self.Language]
 
     @staticmethod
     def _load(file=None):

@@ -14,7 +14,7 @@ class Result:
     @property
     def translation(self):
         translation = self.expect[2]
-        return translation if translation else '暂无翻译\nNone Translations'
+        return translation if translation else '暂无翻译'
     
     @translation.setter
     def translation(self, translation):
@@ -25,7 +25,8 @@ class Result:
 
     @property
     def definition(self):
-        return self.expect[1]
+        definition = self.expect[1]
+        return definition if definition else 'None Translations'
 
     @definition.setter
     def definition(self, definition):

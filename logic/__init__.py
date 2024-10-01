@@ -2,13 +2,13 @@ from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystem
 from PySide6.QtCore import QTranslator, QTimer, QEvent
 from libs.translate import translate, online_translate
 from libs.config import Setting
-from libs.tool import main as tool_main, load
+from libs.tool import load
 from .main import UILogic
 from libs.ui.setting import Ui_Settings
 from pywinstyles import apply_style
 from threading import Thread
 from time import sleep
-from res import version
+from res import info
 
 class LogicFrame:
     def __init__(self, file=None):
@@ -30,23 +30,10 @@ class LogicFrame:
         self.setting_ui = Ui_Settings()
         self.setting_ui.setupUi(self.setting)
         #Variable
-        self.tool_thread = Thread()
         self.online = False
         self.running = True
-        #Connections
-        self.MainWindow.closeEvent = self.close
-        self.MainWindow.changeEvent = lambda e: self.close(e) if self.MainWindow.isMinimized() else ...
-        self.tray.activated.connect(self.tray_activated)
-        self.ui.actionSetting.triggered.connect(self.setting_show)
-        self.ui.actionOnline.triggered.connect(self.command_online)
-        self.ui.actionRun.triggered.connect(lambda:self.start_tool() if not self.tool_thread.is_alive() else ...)
-        self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
-        self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
-        self.setting_ui.buttonBox.accepted.connect(self.accept)
-        self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(QFile.getOpenFileName(self.setting, 'Default Vocabulary File', './', '*.tvf')[0]))
-        self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
         #UI
+        self.connect_actions()
         self.retrans()
         self.ui.setShotcuts()
         self.ui.load_dicts()
@@ -55,9 +42,20 @@ class LogicFrame:
         self.argv = file
         Thread(target=lambda:self.ui.load(file)).start()
         Thread(target=self.auto_translate).start()
-        self.auto_save_timer = self.ticker(lambda:self.ui.save_all() if not self.tool_thread.is_alive() and Setting.Auto_save else ..., Setting.Auto_save_interval*1000)
-        self.ticker(lambda:self.ui.actionRun.setEnabled(not self.tool_thread.is_alive()), 500)
+        self.auto_save_timer = self.ticker(lambda:self.ui.save_all() if Setting.Auto_save else ..., Setting.Auto_save_interval*1000)
         self.ticker(self.check_running, 500)
+
+    def connect_actions(self):
+        self.MainWindow.closeEvent = self.close
+        self.tray.activated.connect(self.tray_activated)
+        self.ui.actionSetting.triggered.connect(self.setting_show)
+        self.ui.actionOnline.triggered.connect(self.command_online)
+        self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
+        self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
+        self.setting_ui.buttonBox.accepted.connect(self.accept)
+        self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
+        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(QFile.getOpenFileName(self.setting, Setting.getTr('default_file'), './', '*.tvf')[0]))
+        self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
     def ticker(self, func, interval):
         timer = QTimer(self.MainWindow)
@@ -103,14 +101,15 @@ class LogicFrame:
         self.setting.show()
 
     def show_tools(self):
-        self.ui.menuTools_Run.clear()
+        for action in self.ui.menuTools.actions()[2:]:
+            self.ui.menuTools.removeAction(action)
         from libs.tool import Tools
         for tl in Tools.values():
             tl.ui = self
             tl.lang = Setting.Language
             action = tl.action()
-            if tl.type: self.ui.menuTools_Run.addMenu(action)
-            else: self.ui.menuTools_Run.addAction(action)
+            if tl.type: self.ui.menuTools.addMenu(action)
+            else: self.ui.menuTools.addAction(action)
 
     def command_online(self):
         if self.online:
@@ -136,7 +135,7 @@ class LogicFrame:
             self.app.removeTranslator(translator)
         self.ui.Bank.lang = Setting.Language
         self.ui.Detail.lang = Setting.Language
-        title = f'{self.MainWindow.windowTitle()} {version.Translator}'
+        title = f'{self.MainWindow.windowTitle()} {info.Translator}'
         self.MainWindow.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()
@@ -145,7 +144,7 @@ class LogicFrame:
         tick = 0
         while self.running:
             #Auto Translate
-            if self.MainWindow.hasFocus():
+            if self.MainWindow.isActiveWindow():
                 ticking = tick > 20
                 if self.ui.text_changed or ticking:
                     tick = 0
@@ -162,10 +161,6 @@ class LogicFrame:
                 sleep(0.05)
             else:
                 sleep(0.5)
-
-    def start_tool(self):
-        self.tool_thread = Thread(target=tool_main, daemon=True)
-        self.tool_thread.start()
 
     def exec(self): return self.app.exec()
 

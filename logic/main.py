@@ -51,10 +51,10 @@ class UILogic(Ui_MainWindow):
         self.actionNew.triggered.connect(lambda:self.Files.new())
         self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current))
         self.actionDict_Reload.triggered.connect(self.load_dicts)
-        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, 'Load Vocubulary File', './', '*.tvf')[0]))
+        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, Setting.getTr('load'), './', '*.tvf')[0]))
         self.actionSave.triggered.connect(lambda:self.Files.current.save())
         self.actionSave_All.triggered.connect(lambda:self.save_all(False))
-        self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, 'Save Vocubulary File', './', '*.tvf')[0]))
+        self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, Setting.getTr('save_as'), './', '*.tvf')[0]))
         self.actionRemove.triggered.connect(self.Files.remove)
         self.actionClear.triggered.connect(self.Files.clear)
         self.actionExit.triggered.connect(self.close)
@@ -75,7 +75,7 @@ class UILogic(Ui_MainWindow):
         #Signal
         self.signal.set_result_singal.connect(self.set_result)
         self.signal.show_dicts_singal.connect(self.show_dictionaries)
-        self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, 'Warning', "Can't load dictionary.tdf.\nThe translate function will be disabled.\nBut you can read existed vocabularies."))
+        self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, Setting.getTr('warning'), Setting.getTr('translate_function_unavailable')))
 
     def setShotcuts(self):
         self.Add.setShortcut(Setting.Key_Add)
@@ -119,11 +119,11 @@ class UILogic(Ui_MainWindow):
         result = self.result
         if result.match:
             self.Translated_text.setText(result.get_tip(Setting.Language))
-            self.Translated_text.setToolTip('Double Click to Correct' if Setting.Language else '双击更正')
+            self.Translated_text.setToolTip(Setting.getTr('correct_hint'))
             return   
         if result:
             f = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
-            self.Info.setToolTip(f%('Double Click to Speech Out' if Setting.Language else '双击朗读'))
+            self.Info.setToolTip(f % Setting.getTr('speech_hint'))
         self.result = result
         self.Detail.results = result.detail
 

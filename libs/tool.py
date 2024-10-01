@@ -2,12 +2,12 @@ import os, importlib
 from libs.stdout import print
 from tools.base import Tool
 
-def get_tools() -> dict[str, Tool]:
+def load():
+    global Tools
     try: Tools = dynamic_get()
     except: Tools = static_get()
-    return Tools
 
-def dynamic_get():
+def dynamic_get() -> dict[str, Tool]:
     Tools = {}
     dpath = os.path.join(os.getcwd(), 'tools')
     for f in os.listdir(dpath):
@@ -28,3 +28,5 @@ def static_get():
         'convert': convert.tool,
         'mix': mix.tool,
     }
+
+load()

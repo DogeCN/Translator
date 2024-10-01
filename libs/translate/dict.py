@@ -16,10 +16,12 @@ def load_dict(callback):
     global dictionaries
     dictionaries.clear()
     dpath = os.path.join(os.getcwd(), 'dictionaries')
-    for f in os.listdir(dpath):
-        if f.endswith('.tdf'):
-            try:
-                dictionaries.append(Dictionary(load(dpath + os.sep + f), f[:-4]))
-            except: continue
+    try:
+        for f in os.listdir(dpath):
+            if f.endswith('.tdf'):
+                try:
+                    dictionaries.append(Dictionary(load(dpath + os.sep + f), f[:-4]))
+                except: continue
+    except: ...
     if not dictionaries: callback()
     return dictionaries

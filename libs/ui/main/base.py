@@ -246,6 +246,10 @@ class Files(BaseListWidget):
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
+            for url in event.mimeData().urls():
+                if not url.toLocalFile().endswith('.tvf'):
+                    event.ignore()
+                    return
             event.accept()
         else:
             event.ignore()

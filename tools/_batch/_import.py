@@ -16,7 +16,7 @@ def main(*args):
             c = process(files)
         else:
             file = 'input.txt'
-            tip = tool.translate('tip')
+            tip = tool.getTr('tip')
             with open(file, 'w', encoding='utf-8') as f:
                 f.write(tip)
             tool.Pop(file).wait()
@@ -28,12 +28,12 @@ def main(*args):
             f.close(); files = [file]
             c = process(files)
         finfo = ', '.join(files)
-        tool.Show(tool.translate('imported') % finfo)
+        tool.Show(tool.getTr('imported') % finfo)
         if c:
             info = '\n'.join([f"'{w}' -> '{c[w]}'" for w in c])
-            tool.Show(tool.translate('corrected') % info)
+            tool.Show(tool.getTr('corrected') % info)
     except Exception as e:
-        tool.Error(tool.translate('error') % e)
+        tool.Error(tool.getTr('error') % e)
 
 def process(files):
     corrected = {}
@@ -58,6 +58,6 @@ tool.name_zh = '导入'
 tool.doc = 'Import words file and batch translate to bank'
 tool.doc_zh = '导入单词并批量翻译'
 tool.action.shortcut = 'Ctrl+Alt+I'
-tool.tr = tr
+tool.Tr = tr
 tool.entrance = main
 tool.attr = 'Purple', 'Bold'
