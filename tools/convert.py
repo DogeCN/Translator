@@ -11,17 +11,17 @@ tr = {
     'error' : ('错误: %s', 'Error: %s')
 }
 
-def main(*args):
+def main(blank=False):
     try:
         file_name=tool.SaveFile(type='*.docx')
         if file_name:
-            process().save(file_name)
+            process(blank).save(file_name)
             if tool.Ask(tool.getTr('view') % file_name):
                 tool.Pop(file_name)
     except Exception as e:
         tool.Error(tool.getTr('error') % e)
 
-def process():
+def process(blank):
     from libs.config import Setting
     document = Document()
     section = document.sections[0]
@@ -43,18 +43,29 @@ def process():
     header.add_run(tool.getTr('stamp') % (info.Translator, _getstamp('%m/%d')))
     for result in io.read_vocabulary():
         information = result.info
-        head = f'{result.word} /{information}/' if information else result.word
+        word = ''.join(['_' if blank and c.isalpha() else c for c in result.word])
+        head = f'{word} /{information}/' if information else word
         p = document.add_paragraph(f'{head}\n{result.get_translation(Setting.Language)}')
         p.paragraph_format.line_spacing = Pt(10)
         p.paragraph_format.space_after = Pt(5)
     return document
 
-tool = Tool()
+tool1 = Tool()
+tool1.name = 'Full'
+tool1.name_zh = '完整版'
+tool1.doc = 'Convert vocabulary file to docx with full information'
+tool1.doc_zh = '转换单词表为完整版文档'
+tool1.entrance = main
+
+tool2 = Tool()
+tool2.name = 'Blank'
+tool2.name_zh = '填空版'
+tool2.doc = 'Convert vocabulary file to docx with blank'
+tool2.doc_zh = '转换单词表为填空版文档'
+tool2.entrance = lambda:main(True)
+
+tool = Tool(1)
 tool.name = 'Convert'
 tool.name_zh = '转换'
-tool.doc = 'Convert vocabulary file to docx'
-tool.doc_zh = '转换单词表为文档'
-tool.action.shortcut = 'Ctrl+Alt+C'
+tool.action.tools = [tool1, tool2]
 tool.Tr = tr
-tool.entrance = main
-tool.attr = 'Green', 'Bold'

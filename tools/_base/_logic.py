@@ -1,5 +1,3 @@
-#This is a fake code to provide typing hint
-
 from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer
 from logic.main import UILogic
@@ -7,7 +5,7 @@ from libs.ui.setting import Ui_Settings
 from threading import Thread
 
 class LogicFrame:
-    def __init__(self, file=None):
+    def __init__(self):
         self.app = ... #type: QApplication
         self.MainWindow = ... #type: QMainWindow
         self.ui = ... #type: UILogic
@@ -18,6 +16,7 @@ class LogicFrame:
         self.online = False
         self.running = True
         self.auto_save_timer = ... #type: QTimer
+    def connect_actions(self): ...
     def ticker(self, func, interval): ...
     def check_running(self): ...
     def tray_activated(self, reason): ...

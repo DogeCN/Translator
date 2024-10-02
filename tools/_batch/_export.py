@@ -1,6 +1,6 @@
 from ..base import *
 
-def main(*args):
+def main():
     try:
         file = tool.SaveFile(type='*.txt')
         if file:
@@ -17,4 +17,3 @@ tool.doc_zh = '导出单词'
 tool.action.shortcut = 'Ctrl+Alt+E'
 tool.Tr = {'open':("是否打开 '%s'", "Open '%s'?")}
 tool.entrance = main
-tool.attr = 'Purple',

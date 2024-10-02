@@ -9,7 +9,7 @@ tr = {
     'error' : ('错误: %s', 'Error: %s')
 }
 
-def main(*args):
+def main():
     try:
         files = tool.OpenFiles(type='*.txt')
         if files:
@@ -60,4 +60,3 @@ tool.doc_zh = '导入单词并批量翻译'
 tool.action.shortcut = 'Ctrl+Alt+I'
 tool.Tr = tr
 tool.entrance = main
-tool.attr = 'Purple', 'Bold'

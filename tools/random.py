@@ -1,7 +1,7 @@
 from .base import *
 from random import choice, randint
 
-def all(*args):
+def all():
     global dictionaries
     from libs.translate.dict import dictionaries
     while True:
@@ -30,7 +30,6 @@ tool1.doc = 'Random word in dictionary'
 tool1.doc_zh = '在字典中随机'
 tool1.action.shortcut = 'Ctrl+Shift+R'
 tool1.entrance = all
-tool1.attr = 'Red',
 
 tool2 = Tool()
 tool2.name = 'Random in bank'

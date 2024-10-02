@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMessageBox, QMenu, QFileDialog as QFile
 from PySide6.QtGui import QAction
 from libs.io import io
 from libs.stdout import print
-from ._base._logic import LogicFrame
+from tools._base._logic import LogicFrame
 from subprocess import Popen
 
 class Action:
@@ -42,13 +42,11 @@ class Menu:
 class Tool:
     ui = ... #type: LogicFrame
     #Basic Infos
-    attr = 'White',
     name = 'New Tool'
     name_zh = ''
     doc = 'This is a new tool'
     doc_zh = ''
     lang = 1
-    help = 'No Argument Needed'
     Tr = {}
     entrance = None
     def __init__(self, type=0):
