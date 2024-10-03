@@ -1,6 +1,7 @@
 import pickle, zlib, os
+import info
 
-temp = os.getenv('TEMP') + os.path.sep + 'temp'
+temp = info.temp
 
 def load(file):
     com = zlib.decompress(open(file, 'rb').read())

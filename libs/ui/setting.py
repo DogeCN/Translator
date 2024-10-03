@@ -1,6 +1,7 @@
 from PySide6.QtCore import QCoreApplication, QMetaObject, QSize, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QCheckBox, QComboBox, QDialog, QDialogButtonBox, QGridLayout, QHBoxLayout, QVBoxLayout, QKeySequenceEdit, QLabel, QLineEdit, QSpinBox, QToolButton
+from libs.config import Setting
 
 class Ui_Settings(object):
     def setupUi(self, Settings:QDialog):
@@ -39,6 +40,7 @@ class Ui_Settings(object):
         self.lFile = QLabel(Settings)
         self.lFile.setObjectName(u"lFile")
         self.lFile.setMinimumSize(QSize(218, 0))
+        self.lFile.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.lFile, 1, 0, 1, 2)
 
@@ -127,23 +129,21 @@ class Ui_Settings(object):
 
         self.lHot = QLabel(Settings)
         self.lHot.setObjectName(u"lHot")
+        self.lHot.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.lHot, 4, 0, 1, 2)
 
-
         self.buttonBox.accepted.connect(Settings.accept)
 
-        QMetaObject.connectSlotsByName(Settings)
-
     def retranslateUi(self, Settings:QDialog):
-        Settings.setWindowTitle(QCoreApplication.translate("Settings", u"Settings", None))
-        self.lLang.setText(QCoreApplication.translate("Settings", u"Language", None))
-        self.lFile.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p align=\"center\">Files</p></body></html>", None))
-        self.lVoc.setText(QCoreApplication.translate("Settings", u"Vocabulary", None))
-        self.lAuto.setText(QCoreApplication.translate("Settings", u"Auto Save", None))
-        self.Interval.setSuffix(QCoreApplication.translate("Settings", u" Seconds", None))
-        self.lAdd.setText(QCoreApplication.translate("Settings", u"Add", None))
-        self.lDel.setText(QCoreApplication.translate("Settings", u"Delete", None))
-        self.lTop.setText(QCoreApplication.translate("Settings", u"Top", None))
-        self.lHot.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p align=\"center\">Hotkeys</p></body></html>", None))
+        Settings.setWindowTitle(Setting.translateUI('Settings'))
+        self.lLang.setText(Setting.translateUI('Language'))
+        self.lFile.setText(Setting.translateUI('Files'))
+        self.lVoc.setText(Setting.translateUI('Vocabulary'))
+        self.lAuto.setText(Setting.translateUI('Auto Save'))
+        self.Interval.setSuffix(Setting.translateUI(' Secs'))
+        self.lAdd.setText(Setting.translateUI('Add'))
+        self.lDel.setText(Setting.translateUI('Delete'))
+        self.lTop.setText(Setting.translateUI('Top'))
+        self.lHot.setText(Setting.translateUI('Hotkeys'))
 

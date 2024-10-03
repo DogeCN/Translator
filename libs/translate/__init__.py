@@ -1,5 +1,6 @@
 from difflib import SequenceMatcher
 from .api import api_translate
+import info
 
 class Result:
     top = False
@@ -14,7 +15,7 @@ class Result:
     @property
     def translation(self):
         translation = self.expect[2]
-        return translation if translation else '暂无翻译'
+        return translation if translation else info.nontr[0]
     
     @translation.setter
     def translation(self, translation):
@@ -26,7 +27,7 @@ class Result:
     @property
     def definition(self):
         definition = self.expect[1]
-        return definition if definition else 'None Translations'
+        return definition if definition else info.nontr[1]
 
     @definition.setter
     def definition(self, definition):
@@ -62,8 +63,7 @@ class Result:
     
     def get_tip(self, lang):
         trans_html = self.get_translation(lang).replace('\n', '<br>')
-        htip = 'Do you mean %s: ' if lang else '你是否在找 %s: '
-        return f'<html><body><p><span style=" font-size:11pt; font-weight:600;">{htip%self.word}</span style=" font-size:10pt"></p><p>{trans_html}</p></body></html>'
+        return info.htip_hint % (info.Tr['htip'][lang] % self.word, trans_html)
 
 def fast(func):
     def wrapper(word: str, Results: list[Result] = []) -> Result:

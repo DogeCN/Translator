@@ -1,18 +1,18 @@
 import sys, time, os, ctypes, winreg
-from res import info
 from logic import LogicFrame
 from libs.stdout import print
+import info
 
-Debug = os.path.exists('res/.DEBUG')
+Debug = os.path.exists(info.debug)
 
-print(f'Translator {info.Translator} By Doge', 'Yellow', 'Bold')
+print(f'{info.prog_name} {info.version} By Doge', 'Yellow', 'Bold')
 print('Starting...', 'Green', 'Bold')
 
 def main():
     argv = sys.argv[1] if len(sys.argv) > 1 else None
-    fr = 'res/running'
-    difftime = time.time() - os.path.getatime(fr)
+    fr = info.running
     try:
+        difftime = time.time() - os.path.getatime(fr)
         lines = open(fr).readlines()
         running = lines[0] == 'True\n' and difftime < 1
     except: running = False
@@ -27,9 +27,9 @@ def main():
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]
-    if file.endswith('.exe'):
-        sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Classes\\.tvf')
-        winreg.SetValue(sub_key, 'shell\\open\\command', winreg.REG_SZ, f'"{file}" "%1"')
+    if file.endswith(info.ext_self_exe):
+        sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, info.reg_ext)
+        winreg.SetValue(sub_key, info.reg_cmd, winreg.REG_SZ, f'"{file}" "%1"')
         ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
         print('.TVF Registered', 'Green')
 

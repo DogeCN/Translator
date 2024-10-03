@@ -1,5 +1,6 @@
-import os
 from libs.io.base import load
+import info
+import os
 
 class Dictionary(dict):
     enabled = True
@@ -15,12 +16,15 @@ dictionaries = [] #type: list[Dictionary[str, dict[str, list]]]
 def load_dict(callback):
     global dictionaries
     dictionaries.clear()
-    dpath = os.path.join(os.getcwd(), 'dictionaries')
+    from .dicts import Base, Long, Phrase
+    dictionaries = [Dictionary(Base, 'Base'),
+        Dictionary(Long, 'Long'),
+        Dictionary(Phrase, 'Phrase')]
     try:
-        for f in os.listdir(dpath):
-            if f.endswith('.tdf'):
+        for f in os.listdir(info.dicts):
+            if f.endswith(info.ext_dict):
                 try:
-                    dictionaries.append(Dictionary(load(dpath + os.sep + f), f[:-4]))
+                    dictionaries.append(Dictionary(load(info.dicts + os.sep + f), f[:-4]))
                 except: continue
     except: ...
     if not dictionaries: callback()

@@ -1,7 +1,8 @@
 import sys, time
+import info
 
 stdout = sys.stdout
-log = 'res/latest.log'
+log = info.log
 
 if not stdout: open(log, 'w').close()
 

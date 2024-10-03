@@ -9,6 +9,7 @@ from libs.config import Setting
 from win32com.client import Dispatch
 from threading import Thread
 import webbrowser
+import info
 
 class UISignal(QObject):
     set_result_singal = Signal()
@@ -41,7 +42,7 @@ class UILogic(Ui_MainWindow):
         super().setupUi(MainWindow)
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
-        self.raw.setStyleSheet('background-color: rgb(30, 30, 30);')
+        self.raw.setStyleSheet(info.StlSheets['raw'])
         self.Bank.lang = Setting.Language
         self.Detail.lang = Setting.Language
         self.connect_actions()
@@ -51,14 +52,14 @@ class UILogic(Ui_MainWindow):
         self.actionNew.triggered.connect(lambda:self.Files.new())
         self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current))
         self.actionDict_Reload.triggered.connect(self.load_dicts)
-        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, Setting.getTr('load'), './', '*.tvf')[0]))
+        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, Setting.getTr('load'), info.root, info.ext_all_tvf)[0]))
         self.actionSave.triggered.connect(lambda:self.Files.current.save())
         self.actionSave_All.triggered.connect(lambda:self.save_all(False))
-        self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, Setting.getTr('save_as'), './', '*.tvf')[0]))
+        self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, Setting.getTr('save_as'), info.root, info.ext_all_tvf)[0]))
         self.actionRemove.triggered.connect(self.Files.remove)
         self.actionClear.triggered.connect(self.Files.clear)
         self.actionExit.triggered.connect(self.close)
-        self.actionAbout.triggered.connect(lambda:webbrowser.open('github.com/DogeCN/Translator'))
+        self.actionAbout.triggered.connect(lambda:webbrowser.open(info.url_repo))
         self.actionAboutQt.triggered.connect(lambda:QMessageBox.aboutQt(self.raw))
         #Button Actions
         self.Add.clicked.connect(self.command_add)
@@ -122,8 +123,7 @@ class UILogic(Ui_MainWindow):
             self.Translated_text.setToolTip(Setting.getTr('correct_hint'))
             return   
         if result:
-            f = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
-            self.Info.setToolTip(f % Setting.getTr('speech_hint'))
+            self.Info.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
         self.result = result
         self.Detail.results = result.detail
 
@@ -144,7 +144,7 @@ class UILogic(Ui_MainWindow):
 
     def load(self, file:str|list[str]=None):
         if not file:
-            file = Setting.Vocubulary
+            file = Setting.Vocabulary
         self.Files.load(file)
         self.display_file()
 

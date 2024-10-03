@@ -1,6 +1,8 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 from libs.translate import Result
+from libs.config import Setting
 from libs.io import io
+import info
 import os
 
 TOP = QtWidgets.QAbstractItemView.ScrollHint.PositionAtTop
@@ -197,7 +199,7 @@ class FItem(QtWidgets.QListWidgetItem):
         if not self.saved:
             file = file if file else self.file
             if not self.exists(file):
-                file = QtWidgets.QFileDialog.getSaveFileName(None, 'Save as ...', file, '*.tvf')[0]
+                file = QtWidgets.QFileDialog.getSaveFileName(None, Setting.getTr('save_as'), file, info.ext_all_tvf)[0]
                 if file: self.file = file
                 else: return
             io.save_vocabulary(self.results, file)
@@ -234,7 +236,7 @@ class Files(BaseListWidget):
 
     def new(self, fn=None):
         if not fn:
-            fn = 'untitled%s.tvf'
+            fn = 'untitled%s' + info.ext_tvf
             lfn = lambda fn:fn in self.names or os.path.exists(fn)
             if lfn(fn%''):
                 i = 2
@@ -247,7 +249,7 @@ class Files(BaseListWidget):
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
             for url in event.mimeData().urls():
-                if not url.toLocalFile().endswith('.tvf'):
+                if not url.toLocalFile().endswith(info.ext_tvf):
                     event.ignore()
                     return
             event.accept()

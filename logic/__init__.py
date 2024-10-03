@@ -8,7 +8,7 @@ from libs.ui.setting import Ui_Settings
 from pywinstyles import apply_style
 from threading import Thread
 from time import sleep
-from res import info
+import info
 
 class LogicFrame:
     def __init__(self, file=None):
@@ -21,7 +21,7 @@ class LogicFrame:
         self.tray = QSystemTrayIcon(self.ui.icon, self.MainWindow)
         tmenu = QMenu(self.ui.raw)
         tmenu.addAction(self.ui.actionExit)
-        tmenu.setStyleSheet('border-radius:5px;')
+        tmenu.setStyleSheet(info.StlSheets['tmenu'])
         self.tray.setContextMenu(tmenu)
         self.MainWindow.show()
         self.tray.show()
@@ -54,7 +54,7 @@ class LogicFrame:
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(QFile.getOpenFileName(self.setting, Setting.getTr('default_file'), './', '*.tvf')[0]))
+        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(QFile.getOpenFileName(self.setting, Setting.getTr('default_file'), info.root, info.ext_all_tvf)[0]))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
     def ticker(self, func, interval):
@@ -64,13 +64,13 @@ class LogicFrame:
         return timer
 
     def check_running(self):
-        action = open('res/running').read().split('\n')[1]
+        action = open(info.running).read().split('\n')[1]
         if action:
             if action != 'Show':
                 self.ui.load(action)
             self.MainWindow.activateWindow()
             self.MainWindow.showNormal()
-        open('res/running', 'w').write('True\n')
+        open(info.running, 'w').write('True\n')
 
     def tray_activated(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
@@ -81,7 +81,7 @@ class LogicFrame:
         Setting.Auto_save = self.setting_ui.Auto_Save.isChecked()
         Setting.Auto_save_interval = self.setting_ui.Interval.value()
         self.auto_save_timer.setInterval(Setting.Auto_save_interval*1000)
-        Setting.Vocubulary = self.setting_ui.Vocabulary.text()
+        Setting.Vocabulary = self.setting_ui.Vocabulary.text()
         Setting.Key_Add = self.setting_ui.Key_Add.keySequence().toString()
         Setting.Key_Del = self.setting_ui.Key_Delete.keySequence().toString()
         Setting.Key_Top = self.setting_ui.Key_Top.keySequence().toString()
@@ -94,7 +94,7 @@ class LogicFrame:
         self.setting_ui.Auto_Save.setChecked(Setting.Auto_save)
         self.setting_ui.Interval.setEnabled(Setting.Auto_save)
         self.setting_ui.Interval.setValue(Setting.Auto_save_interval)
-        self.setting_ui.Vocabulary.setText(Setting.Vocubulary)
+        self.setting_ui.Vocabulary.setText(Setting.Vocabulary)
         self.setting_ui.Key_Add.setKeySequence(Setting.Key_Add)
         self.setting_ui.Key_Delete.setKeySequence(Setting.Key_Del)
         self.setting_ui.Key_Top.setKeySequence(Setting.Key_Top)
@@ -122,20 +122,11 @@ class LogicFrame:
     def retrans(self, lang=None):
         if lang is not None:
             Setting.Language = lang
-        if Setting.Language:
-            self.setting_ui.retranslateUi(self.setting)
-            self.ui.retranslateUi(self.MainWindow)
-        else:
-            translator = QTranslator(self.MainWindow)
-            self.app.installTranslator(translator)
-            translator.load('./res/lang/setting.qm')
-            self.setting_ui.retranslateUi(self.setting)
-            translator.load('./res/lang/zh.qm')
-            self.ui.retranslateUi(self.MainWindow)
-            self.app.removeTranslator(translator)
+        self.setting_ui.retranslateUi(self.setting)
+        self.ui.retranslateUi(self.MainWindow)
         self.ui.Bank.lang = Setting.Language
         self.ui.Detail.lang = Setting.Language
-        title = f'{self.MainWindow.windowTitle()} {info.Translator}'
+        title = f'{self.MainWindow.windowTitle()} {info.version}'
         self.MainWindow.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()
@@ -169,7 +160,7 @@ class LogicFrame:
             self.running = False
             if Setting.Auto_save:
                 self.ui.save_all(False)
-            open('res/running', 'w').write('False\n')
+            open(info.running, 'w').write('False\n')
             self.app.quit()
         else:
             self.MainWindow.hide()

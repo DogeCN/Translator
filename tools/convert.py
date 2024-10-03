@@ -3,7 +3,7 @@ from libs.stdout import _getstamp
 from docx import Document
 from docx.oxml.ns import qn
 from docx.shared import Pt
-import res.info as info
+import info
 
 tr = {
     'view' : ("已转换到 '%s'\n是否查看?", 'Converted to %s\nDo You Want to Have a View?'),
@@ -40,7 +40,7 @@ def process(blank):
     normal._element.rPr.rFonts.set(qn('w:eastAsia'), font_family)
     normal.font.size = Pt(9)
     header = section.header.paragraphs[0]
-    header.add_run(tool.getTr('stamp') % (info.Translator, _getstamp('%m/%d')))
+    header.add_run(tool.getTr('stamp') % (info.version, _getstamp('%m/%d')))
     for result in io.read_vocabulary():
         information = result.info
         word = ''.join(['_' if blank and c.isalpha() else c for c in result.word])
