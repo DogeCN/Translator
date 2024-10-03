@@ -16,10 +16,6 @@ dictionaries = [] #type: list[Dictionary[str, dict[str, list]]]
 def load_dict(callback):
     global dictionaries
     dictionaries.clear()
-    from .dicts import Base, Long, Phrase
-    dictionaries = [Dictionary(Base, 'Base'),
-        Dictionary(Long, 'Long'),
-        Dictionary(Phrase, 'Phrase')]
     try:
         for f in os.listdir(info.dicts):
             if f.endswith(info.ext_dict):
