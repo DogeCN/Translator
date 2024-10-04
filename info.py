@@ -41,10 +41,12 @@ Tr = {
     'translate_function_unavailable' : (
         '''无法加载字典
 翻译功能不可用
-但你可以浏览已有词汇''',
+但你可以浏览已有词汇
+(首次使用需连接互联网)''',
         '''Can't load dictionaries.
 Although the translate function is unavailable,
-you can read existed vocabularies.'''
+you can read existed vocabularies.
+(Internet connection required for the first use)'''
         ),
     'correct_hint' : ('双击更正', 'Double Click to Correct'),
     'speech_hint' : ('双击朗读', 'Double Click to Speech Out'),
@@ -74,11 +76,11 @@ UITr = {
     'Enter a word' : '请输入单词',
     'Add into Vocabulary' : '加入单词表',
     'Vocabulary Bank' : '词汇表',
-    'Translation' : '翻译',
-    'Top the Word' : '置顶单词',
-    'Delete the Word' : '删除已选单词',
+    'Translations' : '翻译',
+    'Top the Words' : '置顶单词',
+    'Delete the Words' : '删除已选单词',
     'Detail' : '变形',
-    'Infomation' : '信息',
+    'Infomations' : '信息',
     'File' : '文件',
     'Tools' : '工具',
     'Settings' : '设置',
@@ -89,23 +91,23 @@ UITr = {
     'Save' : '保存',
     'Save File' : '保存文件',
     'Load' : '载入',
-    'Load File' : '加载文件',
+    'Load Files' : '加载文件',
     'Save As' : '另存为',
     'Save File As ...' : '另存为...',
     'Clear' : '清除',
-    'Clear File' : '清除所有文件',
+    'Clear Files' : '清除所有文件',
     'Exit' : '退出',
     'About This Programm' : '关于本项目',
     'About Qt' : '关于Qt',
     'About Qt Engine' : '关于Qt引擎',
-    'Relaod Tool' : '重载工具',
-    'Reload Dictionariy' : '重载字典',
+    'Relaod Tools' : '重载工具',
+    'Reload Dictionaries' : '重载字典',
     'Remove' : '移除',
     'Remove Current File' : '移除当前文件',
     'New' : '新建',
     'Create a New File' : '新建文件',
     'Save All' : '全部保存',
-    'Save All File' : '保存所有文件',
+    'Save All Files' : '保存所有文件',
     'Online' : '在线',
     'Online Mode' : '在线模式'
 }
