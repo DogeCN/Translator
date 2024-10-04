@@ -10,7 +10,7 @@ class Settings:
             self.__dict__ = load(file).__dict__
         except:
             self.Language = 0 #0:zh, 1:en
-            self.Vocabulary = 'vocabulary.tvf'
+            self.Vocabulary = info.default_tvf
             self.Auto_save = True
             self.Auto_save_interval = 60
             self.Key_Add = 'Ctrl+E'

@@ -154,7 +154,5 @@ dmypy.json
 cython_debug/
 
 
-*.tvf
-*.DEBUG
 .source/
 python/

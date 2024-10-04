@@ -1,23 +1,25 @@
 import os
 
 prog_name = 'Translator'
+prog_name_cn = '翻译器'
 version = 'v1.14.6'
+root = './'
 data_dir = os.getenv('AppData') + os.sep + prog_name + os.sep
 if not os.path.exists(data_dir):
     os.mkdir(data_dir)
-debug = data_dir + '.DEBUG'
-running = data_dir + 'running'
-tools = 'tools'
 dicts = data_dir + 'dictionaries'
 if not os.path.exists(dicts):
     os.mkdir(dicts)
-lang_setting = 'res/lang/setting.qm'
-lang_zh = 'res/lang/zh.qm'
-root = './'
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
 ext_self_exe = '*.exe'
+debug = data_dir + '.DEBUG'
+running = data_dir + 'running'
+tools = 'tools'
+default_tvf = data_dir + 'vocabulary' + ext_tvf
+lang_setting = 'res/lang/setting.qm'
+lang_zh = 'res/lang/zh.qm'
 reg_ext = 'Software\\Classes\\' + ext_tvf
 reg_cmd = 'shell\\open\\command'
 url_repo = 'github.com/DogeCN/Translator'
@@ -53,7 +55,7 @@ StlSheets = {
 }
 
 UITr = {
-    'Translator' : '翻译器',
+    prog_name : prog_name_cn,
     'Setting' : '设置',
     'Language' : '语言',
     'Auto Save' : '自动保存',
