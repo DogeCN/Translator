@@ -7,9 +7,9 @@ root = './'
 data_dir = os.getenv('AppData') + os.sep + prog_name + os.sep
 if not os.path.exists(data_dir):
     os.mkdir(data_dir)
-dicts = data_dir + 'dictionaries'
-if not os.path.exists(dicts):
-    os.mkdir(dicts)
+dicts_dir = data_dir + 'dictionaries'  + os.sep
+if not os.path.exists(dicts_dir):
+    os.mkdir(dicts_dir)
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
@@ -23,13 +23,16 @@ lang_zh = 'res/lang/zh.qm'
 reg_ext = 'Software\\Classes\\' + ext_tvf
 reg_cmd = 'shell\\open\\command'
 url_repo = 'github.com/DogeCN/Translator'
-url_trans = 'https://trans-api.hark2009lbf.workers.dev/translate_a/single?client=gtx&dt=t&sl=auto&tl=%s&q=%s'
+url_trans = 'https://trans-api.dogecn.workers.dev/translate_a/single?client=gtx&dt=t&sl=auto&tl=%s&q=%s'
 htip_hint = '<html><body><p><span style=" font-size:11pt; font-weight:600;">%s</span style=" font-size:10pt"></p><p>%s</p></body></html>'
 match_hint = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
 log = data_dir + 'latest.log'
 setting = data_dir + 'setting.tsf'
 temp = data_dir + 'temp'
 nontr = ('暂无翻译', 'None Translations')
+dnames = ('Base', 'Long', 'Phrase', 'Proper', 'Term')
+durl = 'https://raw.githubusercontent.com/DogeCN/Translator/refs/heads/main/dictionaries/%s'
+durl_cn = 'https://ghproxy.cn/' + durl
 
 Tr = {
     'load' : ('载入单词表', 'Load Vocubulary File'),
