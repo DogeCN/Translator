@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMessageBox, QMenu, QFileDialog as QFile
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QIcon
 from libs.io import io
 from libs.stdout import print
 from tools._base._logic import LogicFrame
@@ -7,6 +7,7 @@ from subprocess import Popen
 
 class Action:
     tool = ... #type: Tool
+    icon = None #type: QIcon
     visible = True
     enabled = True
     shortcut = ''
@@ -16,12 +17,15 @@ class Action:
         action.setVisible(self.visible)
         action.setEnabled(self.enabled)
         action.setShortcut(self.shortcut)
+        if self.icon:
+            action.setIcon(self.icon)
         action.triggered.connect(lambda *x,_t=self.tool:_t())
         return action
 
 class Menu:
     tool = ... #type: Tool
     tools = [] #type: list[Tool]
+    icon = None #type: QIcon
     visible = True
     enabled = True
     def __call__(self):
@@ -36,6 +40,8 @@ class Menu:
             action.setParent(menu)
             if tool.type: action.setMenu(action)
             else: menu.addAction(action)
+        if self.icon:
+            menu.setIcon(self.icon)
         menu.hide()
         return menu
 
@@ -57,7 +63,7 @@ class Tool:
         if self.entrance: self.entrance(*args)
         else: print(f"Can't find an entrance of the tool {self.name}", 'Red')
     #Get Info in Diffrent Languages
-    def _get(self, attr):
+    def _get(self, attr) -> str:
         return getattr(self, attr if self.lang else f'{attr}_zh')
     def get_name(self):
         return self._get('name')

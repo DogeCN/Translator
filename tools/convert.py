@@ -1,4 +1,6 @@
 from .base import *
+from PySide6.QtWidgets import QDialog
+from ._convert import ui
 from libs.stdout import _getstamp
 from docx import Document
 from docx.oxml.ns import qn
@@ -11,22 +13,39 @@ tr = {
     'error' : ('错误: %s', 'Error: %s')
 }
 
-def main(blank=False):
+UITr = {
+    'Columns' : '列数',
+    'Font' : '字体',
+    'Pt' : '磅',
+    'Sections' : '段落',
+    'Stamp' : '时间戳',
+    'Word' : '单词',
+}
+
+def uimain():
+    dialog = QDialog()
+    dialog.setWindowIcon(ui.icon)
+    dialog.accepted.connect(main)
+    dialog.setWindowTitle(tool.get_name())
+    ui.setupUi(dialog, UITr)
+    dialog.exec()
+
+def main():
     try:
         file_name=tool.SaveFile(type='*.docx')
         if file_name:
-            process(blank).save(file_name)
+            process().save(file_name)
             if tool.Ask(tool.getTr('view') % file_name):
                 tool.Pop(file_name)
     except Exception as e:
         tool.Error(tool.getTr('error') % e)
 
-def process(blank):
+def process():
     from libs.config import Setting
     document = Document()
     section = document.sections[0]
     path = section._sectPr.xpath('./w:cols')[0]
-    path.set(qn('w:num'), '4')
+    path.set(qn('w:num'), str(ui.Columns.value()))
     path.set(qn('w:space'), '20')
     section.top_margin = Pt(10)
     section.bottom_margin = Pt(10)
@@ -34,38 +53,27 @@ def process(blank):
     section.right_margin = Pt(20)
     section.page_width = Pt(595)
     section.page_height = Pt(842)
-    font_family = u'Microsoft YaHei UI'
+    font_family = ui.Font.currentText()
     normal = document.styles['Normal']
     normal.font.name = font_family
     normal._element.rPr.rFonts.set(qn('w:eastAsia'), font_family)
-    normal.font.size = Pt(9)
-    header = section.header.paragraphs[0]
-    header.add_run(tool.getTr('stamp') % (info.version, _getstamp('%m/%d')))
+    normal.font.size = Pt(ui.Font_Size.value())
+    if ui.Stamp.isChecked():
+        header = section.header.paragraphs[0]
+        header.add_run(tool.getTr('stamp') % (info.version, _getstamp(ui.Stamp_Format.currentText())))
     for result in io.read_vocabulary():
         information = result.info
-        word = ''.join(['_' if blank and c.isalpha() else c for c in result.word])
-        head = f'{word} /{information}/' if information else word
-        p = document.add_paragraph(f'{head}\n{result.get_translation(Setting.Language)}')
+        word = ''.join(['_' if not ui.Word.isChecked() and c.isalpha() else c for c in result.word])
+        head = f'{word} /{information}/' if ui.Informations.isChecked() and information else word
+        p = document.add_paragraph(f'{head}\n{result.get_translation(Setting.Language)}' if ui.Translations.isChecked() else head)
         p.paragraph_format.line_spacing = Pt(10)
         p.paragraph_format.space_after = Pt(5)
     return document
 
-tool1 = Tool()
-tool1.name = 'Full'
-tool1.name_zh = '完整版'
-tool1.doc = 'Convert vocabulary file to docx with full information'
-tool1.doc_zh = '转换单词表为完整版文档'
-tool1.entrance = main
-
-tool2 = Tool()
-tool2.name = 'Blank'
-tool2.name_zh = '填空版'
-tool2.doc = 'Convert vocabulary file to docx with blank'
-tool2.doc_zh = '转换单词表为填空版文档'
-tool2.entrance = lambda:main(True)
-
-tool = Tool(1)
+tool = Tool()
 tool.name = 'Convert'
 tool.name_zh = '转换'
-tool.action.tools = [tool1, tool2]
+tool.doc = 'Convert vocabulary file to docx'
+tool.doc_zh = '转换单词表为文档'
 tool.Tr = tr
+tool.entrance = uimain

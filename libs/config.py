@@ -20,19 +20,28 @@ class Settings:
     def getTr(self, key:str):
         return info.Tr[key][self.Language]
 
-    def translateUI(self, key:str):
-        if self.Language:
-            return key
-        Tr = info.UITr
+    @staticmethod
+    def _search(Tr, key:str):
         if key in Tr:
             return Tr[key]
         else:
             for k in Tr:
                 if k in key:
                     return key.replace(k, Tr[k])
-            else:
-                print(f'Key {key} not found in UITr', 'Red', 'Bold')
-                return key
+    
+    def translateUI(self, key:str, ExTr=None) -> str:
+        if self.Language:
+            return key
+        Tr=info.UITr
+        res = self._search(Tr, key)
+        if res:
+            return res
+        if ExTr:
+            res = self._search(ExTr, key)
+            if res:
+                return res
+        print(f"Key '{key}' not found", 'Yellow', 'Bold')
+        return key
 
     @staticmethod
     def _load(file=None):

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystemTrayIcon, QFileDialog as QFile
-from PySide6.QtCore import QTranslator, QTimer, QEvent
+from PySide6.QtCore import QTimer, QEvent
 from libs.translate import translate, online_translate
 from libs.config import Setting
 from libs.tool import load
