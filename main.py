@@ -34,6 +34,7 @@ def register(): #For PyInstaller Exe
         print('.TVF Registered', 'Green')
 
 if Debug:
+    print('Debug Mode ON', 'Red', 'Bold')
     main()
 else:
     register()
