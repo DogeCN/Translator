@@ -13,7 +13,7 @@ if not os.path.exists(dicts_dir):
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
-ext_self_exe = '*.exe'
+ext_self_exe = '.exe'
 debug = data_dir + '.DEBUG'
 running = data_dir + 'running'
 tools = 'tools'
