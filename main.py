@@ -31,7 +31,7 @@ def register(): #For PyInstaller Exe
         sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, info.reg_ext)
         winreg.SetValue(sub_key, info.reg_cmd, winreg.REG_SZ, f'"{file}" "%1"')
         ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
-        print('.TVF Registered', 'Green')
+        print('.TVF Registered', 'Green') #Color is useless here 🤔
 
 if Debug:
     print('Debug Mode ON', 'Red', 'Bold')
