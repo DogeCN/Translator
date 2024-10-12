@@ -7,7 +7,7 @@ from . import res
 icon = QIcon()
 
 def setupUi(Dialog:QDialog, Tr):
-    global Columns, Font, Font_Size, Stamp, Stamp_Format, Word, Informations, Translations
+    global Columns, Font, Font_Size, Stamp, Stamp_Format, Word_Count, Word, Informations, Translations
     if not Dialog.objectName():
         Dialog.setObjectName(u"Dialog")
     icon.addFile(u":/icon/x-office-document.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -85,6 +85,13 @@ def setupUi(Dialog:QDialog, Tr):
 
     horizontalLayout_3.addWidget(Stamp_Format)
 
+    Word_Count = QCheckBox(Dialog)
+    Word_Count.setObjectName(u"Word_Count")
+    Word_Count.setMaximumSize(QSize(100, 16777215))
+    Word_Count.setChecked(True)
+
+    horizontalLayout_3.addWidget(Word_Count)
+
 
     gridLayout.addLayout(horizontalLayout_3, 2, 0, 1, 1)
 
@@ -135,6 +142,7 @@ def setupUi(Dialog:QDialog, Tr):
     Font_Size.setSuffix(translate('Pt'))
     label_3.setText(translate('Stamp'))
     label_4.setText(translate('Sections'))
+    Word_Count.setText(translate('Word Count'))
     Word.setText(translate('Word'))
     Informations.setText(translate('Infomations'))
     Translations.setText(translate('Translations'))

@@ -20,6 +20,7 @@ UITr = {
     'Sections' : '段落',
     'Stamp' : '时间戳',
     'Word' : '单词',
+    'Word Count' : '单词计数'
 }
 
 def uimain():
@@ -60,13 +61,14 @@ def process():
     normal.font.size = Pt(ui.Font_Size.value())
     if ui.Stamp.isChecked():
         header = section.header.paragraphs[0]
-        header.add_run(tool.getTr('stamp') % (info.version, _getstamp(ui.Stamp_Format.currentText())))
-    for result in io.read_vocabulary():
+        stamp = tool.getTr('stamp') % (info.version, _getstamp(ui.Stamp_Format.currentText()))
+        header.add_run(stamp + f' ({tool.ui.ui.Bank.count()})' if ui.Word_Count.isChecked() else '')
+    for result in tool.ui.ui.Bank.results:
         information = result.info
         word = ''.join(['_' if not ui.Word.isChecked() and c.isalpha() else c for c in result.word])
-        head = f'{word} /{information}/' if ui.Informations.isChecked() and information else word
-        p = document.add_paragraph(f'{head}\n{result.get_translation(Setting.Language)}' if ui.Translations.isChecked() else head)
-        p.paragraph_format.line_spacing = Pt(10)
+        head = word + f' /{information}/' if ui.Informations.isChecked() and information else ''
+        p = document.add_paragraph(head + f'\n{result.get_translation(Setting.Language)}' if ui.Translations.isChecked() else '')
+        p.paragraph_format.line_spacing = Pt(ui.Font_Size.value())
         p.paragraph_format.space_after = Pt(5)
     return document
 
