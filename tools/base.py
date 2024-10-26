@@ -4,6 +4,7 @@ from libs.io import io
 from libs.stdout import print
 from tools._base._logic import LogicFrame
 from subprocess import Popen
+import info
 
 class Action:
     tool = ... #type: Tool
@@ -106,4 +107,4 @@ class Tool:
     def Pop(f):
         return Popen(f'"{f}"', shell=True)
 
-__all__ = ['Tool', 'print', 'io']
+__all__ = ['Tool', 'print', 'io', 'info']

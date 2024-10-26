@@ -16,6 +16,7 @@ ext_all_tvf = '*' + ext_tvf
 ext_self_exe = '.exe'
 debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
+api_timeout = 3
 running = data_dir + 'running'
 tools = 'tools'
 default_tvf = data_dir + 'vocabulary' + ext_tvf

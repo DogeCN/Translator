@@ -5,7 +5,6 @@ from libs.stdout import _getstamp
 from docx import Document
 from docx.oxml.ns import qn
 from docx.shared import Pt
-import info
 
 tr = {
     'view' : ("已转换到 '%s'\n是否查看?", 'Converted to %s\nDo You Want to Have a View?'),
