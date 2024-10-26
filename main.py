@@ -1,9 +1,7 @@
-import sys, time, os, ctypes, winreg
+import sys, time, ctypes, winreg
 from logic import LogicFrame
 from libs.stdout import print
 import info
-
-Debug = os.path.exists(info.debug)
 
 print(f'{info.prog_name} {info.version} By Doge', 'Yellow', 'Bold')
 print('Starting...', 'Green', 'Bold')
@@ -12,7 +10,7 @@ def main():
     argv = sys.argv[1] if len(sys.argv) > 1 else None
     fr = info.running
     try:
-        difftime = time.time() - os.path.getatime(fr)
+        difftime = time.time() - info.os.path.getatime(fr)
         lines = open(fr).readlines()
         running = lines[0] == 'True\n' and difftime < 1
     except: running = False
@@ -33,7 +31,7 @@ def register(): #For PyInstaller Exe
         ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
         print('.TVF Registered', 'Green') #Color is useless here 🤔
 
-if Debug:
+if info.debug:
     print('Debug Mode ON', 'Red', 'Bold')
     main()
 else:
