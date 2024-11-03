@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMessageBox, QMainWindow, QFileDialog as QFile
+from PySide6.QtWidgets import QMessageBox, QMainWindow
 from PySide6.QtCore import Signal, QObject
 from PySide6.QtGui import QAction
 from libs.translate.dict import Dictionary, load_dict
@@ -6,6 +6,7 @@ from libs.ui.main import Ui_MainWindow
 from libs.ui.main.base import FItem
 from libs.translate import Result
 from libs.config import Setting
+from libs.io import dialog
 from win32com.client import Dispatch
 from threading import Thread
 import webbrowser
@@ -52,10 +53,10 @@ class UILogic(Ui_MainWindow):
         self.actionNew.triggered.connect(lambda:self.Files.new())
         self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current))
         self.actionDict_Reload.triggered.connect(self.load_dicts)
-        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(QFile.getOpenFileNames(self.parent, Setting.getTr('load'), info.root, info.ext_all_tvf)[0]))
+        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(dialog.OpenFiles(self.parent, Setting.getTr('load'), info.ext_all_tvf)))
         self.actionSave.triggered.connect(lambda:self.Files.current.save())
         self.actionSave_All.triggered.connect(lambda:self.save_all(False))
-        self.actionSave_As.triggered.connect(lambda:self.Files.current.save(QFile.getSaveFileName(self.parent, Setting.getTr('save_as'), info.root, info.ext_all_tvf)[0]))
+        self.actionSave_As.triggered.connect(lambda:self.Files.current.save_as())
         self.actionRemove.triggered.connect(self.Files.remove)
         self.actionClear.triggered.connect(self.Files.clear)
         self.actionExit.triggered.connect(self.close)

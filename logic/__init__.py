@@ -1,8 +1,9 @@
-from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystemTrayIcon, QFileDialog as QFile
+from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
 from libs.translate import translate, online_translate
 from libs.config import Setting
 from libs.tool import load
+from libs.io import dialog
 from .main import UILogic
 from libs.ui.setting import Ui_Settings
 from pywinstyles import apply_style
@@ -54,7 +55,7 @@ class LogicFrame:
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(QFile.getOpenFileName(self.setting, Setting.getTr('default_file'), info.root, info.ext_all_tvf)[0]))
+        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_tvf)))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
     def ticker(self, func, interval):

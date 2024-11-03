@@ -44,10 +44,8 @@ class Settings:
         return key
 
     @staticmethod
-    def _load(file=None):
+    def _load(file=data):
         global Setting
-        if not file:
-            file = data
         Setting = Settings(file)
 
     @staticmethod

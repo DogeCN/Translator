@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QMessageBox, QMenu, QFileDialog as QFile
+from PySide6.QtWidgets import QMessageBox, QMenu
 from PySide6.QtGui import QAction, QIcon
-from libs.io import io
+from libs.io import io, dialog
 from libs.stdout import print
 from tools._base._logic import LogicFrame
 from subprocess import Popen
@@ -88,18 +88,18 @@ class Tool:
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         return msg.exec() == QMessageBox.StandardButton.Yes
     #File Operation
-    def OpenDir(self, title=None, dir='./'):
+    def OpenDir(self, title=None, dir=None):
         if not title: title = self.get_name()
-        return QFile.getExistingDirectory(self.ui.MainWindow, title, dir)
-    def OpenFile(self, title=None, dir='./', type=...):
+        return dialog.OpenDir(self.ui.MainWindow, title, dir)
+    def OpenFile(self, title=None, type=..., dir=None):
         if not title: title = self.get_name()
-        return QFile.getOpenFileName(self.ui.MainWindow, title, dir, type)[0]
-    def OpenFiles(self, title=None, dir='./', type=...):
+        return dialog.OpenFile(self.ui.MainWindow, title, type, dir)
+    def OpenFiles(self, title=None, type=..., dir=None):
         if not title: title = self.get_name()
-        return QFile.getOpenFileNames(self.ui.MainWindow, title, dir, type)[0]
-    def SaveFile(self, title=None, dir='./', type=...):
+        return dialog.OpenFiles(self.ui.MainWindow, title, type, dir)
+    def SaveFile(self, title=None, type=..., dir=None):
         if not title: title = self.get_name()
-        return QFile.getSaveFileName(self.ui.MainWindow, title, dir, type)[0]
+        return dialog.SaveFile(self.ui.MainWindow, title, type, dir)
     #Translate Tr Text
     def getTr(self, key):
         return self.Tr[key][self.lang]

@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 from libs.translate import Result
 from libs.config import Setting
-from libs.io import io
+from libs.io import io, dialog
 import info
 import os
 
@@ -195,15 +195,22 @@ class FItem(QtWidgets.QListWidgetItem):
             self.saved = True
         else: self.results = []
     
-    def save(self, file=None):
+    def save(self):
         if not self.saved:
-            file = file if file else self.file
-            if not self.exists(file):
-                file = QtWidgets.QFileDialog.getSaveFileName(None, Setting.getTr('save_as'), file, info.ext_all_tvf)[0]
-                if file: self.file = file
-                else: return
-            io.save_vocabulary(self.results, file)
+            if not self.exists():
+                self.save_as(self.file)
+            else:
+                io.save_vocabulary(self.results, self.file)
+                self.saved = True
+    
+    def save_as(self, file=None):
+        if file:
+            file = dialog.SaveFile(None, Setting.getTr('save_as'), info.ext_all_tvf, file)
+            self.file = file
             self.saved = True
+        else:
+            file = dialog.SaveFile(None, Setting.getTr('save_as'), info.ext_all_tvf)
+        io.save_vocabulary(self.results, file)
 
 class Files(BaseListWidget):
 
