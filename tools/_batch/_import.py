@@ -49,7 +49,7 @@ def process(files):
                         corrected[word] = result.word
                         result.match = False
                         result.top = True
-                    tool.ui.ui.append(result)
+                    tool.mw.ui.append(result)
     return corrected
 
 tool = Tool()

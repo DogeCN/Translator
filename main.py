@@ -1,5 +1,6 @@
+from PySide6.QtWidgets import QApplication
 import sys, time, ctypes, winreg
-from logic import LogicFrame
+from logic import LMainWindow
 from libs.stdout import print
 import info
 
@@ -20,8 +21,9 @@ def main():
         sys.exit()
     else:
         open(fr, 'w').write('True\n')
-    Frame = LogicFrame(argv)
-    sys.exit(Frame.exec())
+    app = QApplication()
+    LMainWindow(argv)
+    sys.exit(app.exec())
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]
@@ -29,7 +31,7 @@ def register(): #For PyInstaller Exe
         sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, info.reg_ext)
         winreg.SetValue(sub_key, info.reg_cmd, winreg.REG_SZ, f'"{file}" "%1"')
         ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
-        print('.TVF Registered', 'Green') #Color is useless here 🤔
+        print('.TVF Registered')
 
 if info.debug:
     print('Debug Mode ON', 'Red', 'Bold')

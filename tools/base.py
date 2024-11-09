@@ -3,7 +3,7 @@ from PySide6.QtGui import QAction, QIcon
 from libs.stdout import print
 from libs.public import Publics
 from libs.io import io, dialog
-from tools._base._logic import LogicFrame
+from tools._base._logic import LMainWindow
 from subprocess import Popen
 import info
 
@@ -14,7 +14,7 @@ class Action:
     enabled = True
     shortcut = ''
     def __call__(self):
-        action = QAction(self.tool.get_name(), self.tool.ui.MainWindow)
+        action = QAction(self.tool.get_name(), self.tool.mw)
         action.setStatusTip(self.tool.get_doc())
         action.setVisible(self.visible)
         action.setEnabled(self.enabled)
@@ -32,9 +32,9 @@ class Menu:
     enabled = True
     def __call__(self):
         for tool in self.tools:
-            tool.ui = self.tool.ui
+            tool.mw = self.tool.mw
             tool.lang = self.tool.lang
-        menu = QMenu(self.tool.get_name(), self.tool.ui.ui.menuBar)
+        menu = QMenu(self.tool.get_name(), self.tool.mw.ui.menuBar)
         menu.setVisible(self.visible)
         menu.setEnabled(self.enabled)
         for tool in self.tools:
@@ -50,7 +50,7 @@ class Menu:
 class Message:
     tool = ... #type: Tool
     def _msg(self, info, icon):
-        msg = QMessageBox(self.tool.ui.MainWindow)
+        msg = QMessageBox(self.tool.mw)
         msg.setWindowTitle(self.tool.get_name())
         msg.setText(str(info))
         msg.setIcon(icon)
@@ -70,16 +70,16 @@ class Dialog:
     tool = ... #type: Tool
     def OpenDir(self, title=None, dir=None):
         if not title: title = self.tool.get_name()
-        return dialog.OpenDir(self.tool.ui.MainWindow, title, dir)
+        return dialog.OpenDir(self.tool.mw, title, dir)
     def OpenFile(self, title=None, type=..., dir=None):
         if not title: title = self.tool.get_name()
-        return dialog.OpenFile(self.tool.ui.MainWindow, title, type, dir)
+        return dialog.OpenFile(self.tool.mw, title, type, dir)
     def OpenFiles(self, title=None, type=..., dir=None):
         if not title: title = self.tool.get_name()
-        return dialog.OpenFiles(self.tool.ui.MainWindow, title, type, dir)
+        return dialog.OpenFiles(self.tool.mw, title, type, dir)
     def SaveFile(self, title=None, type=..., dir=None):
         if not title: title = self.tool.get_name()
-        return dialog.SaveFile(self.tool.ui.MainWindow, title, type, dir)
+        return dialog.SaveFile(self.tool.mw, title, type, dir)
     @staticmethod
     def Pop(f):
         return Popen(f'"{f}"', shell=True)
@@ -113,7 +113,7 @@ class Tr:
         return self.Tr[key][self.tool.lang]
 
 class Tool:
-    ui = ... #type: LogicFrame
+    mw = ... #type: LMainWindow
     #Basic Infos
     name = 'New Tool'
     name_zh = ''

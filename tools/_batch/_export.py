@@ -4,7 +4,7 @@ def main():
     try:
         file = tool.dialog.SaveFile(type='*.txt')
         if file:
-            open(file, 'w', encoding='utf-8').write('\n'.join([f"{'*' if r.top else ''}{r.word}" for r in tool.ui.ui.Bank.results]))
+            open(file, 'w', encoding='utf-8').write('\n'.join([f"{'*' if r.top else ''}{r.word}" for r in tool.mw.ui.Bank.results]))
             tool.dialog.Pop(file) if tool.message.Ask(tool.tr('open') % file) else ...
     except Exception as e:
         tool.message.Error(e)

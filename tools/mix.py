@@ -1,7 +1,7 @@
 from .base import *
 
 def main():
-    ui = tool.ui.ui
+    ui = tool.mw.ui
     results = ui.Bank.results[:]
     for item in ui.Files.items:
         if item != ui.Files.current:

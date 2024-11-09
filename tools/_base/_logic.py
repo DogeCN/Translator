@@ -1,21 +1,20 @@
-from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QSystemTrayIcon
-from PySide6.QtCore import QTimer
-from logic.main import UILogic
-from libs.ui.setting import Ui_Settings
-from threading import Thread
+from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon
+from PySide6.QtCore import QTimer, QEvent
+from logic.main import LMain
 
-class LogicFrame:
-    def __init__(self):
-        self.app = ... #type: QApplication
-        self.MainWindow = ... #type: QMainWindow
-        self.ui = ... #type: UILogic
-        self.tray = ... #type: QSystemTrayIcon
-        self.setting = ... #type: QDialog
-        self.setting_ui = ... #type: Ui_Settings
-        self.tool_thread = ... #type: Thread
+class LMainWindow(QMainWindow):
+    def __init__(self, file=None):
+        super().__init__()
+        #Window Build
+        self.ui = ... # type: LMain
+        self.tray = ... # type: QSystemTrayIcon
+        self.tmenu = ... # type: QMenu
+        self.setting = ... # type: QDialog
         self.online = False
         self.running = True
-        self.auto_save_timer = ... #type: QTimer
+        self.argv = file
+        self.auto_save_timer = ... # type: QTimer
+
     def connect_actions(self): ...
     def ticker(self, func, interval): ...
     def check_running(self): ...
@@ -26,6 +25,4 @@ class LogicFrame:
     def command_online(self): ...
     def retrans(self, lang=None): ...
     def auto_translate(self): ...
-    def start_tool(self): ...
-    def exec(self): ...
-    def close(self, evt): ...
+    def closeEvent(self, evt:QEvent): ...

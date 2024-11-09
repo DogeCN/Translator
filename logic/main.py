@@ -12,18 +12,18 @@ from threading import Thread
 import webbrowser
 import info
 
-class UISignal(QObject):
+class LSignal(QObject):
     set_result_singal = Signal()
     callback_singal = Signal()
     show_dicts_singal = Signal(list)
     def __init__(self):
         super().__init__()
 
-class UILogic(Ui_MainWindow):
+class LMain(Ui_MainWindow):
     text_changed = False
     _voice = Dispatch('SAPI.SpVoice')
     _result = Result()
-    signal = UISignal()
+    signal = LSignal()
     dl_thread = Thread()
     closing = False
     parent = None

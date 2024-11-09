@@ -29,7 +29,7 @@ htip_hint = '<html><body><p><span style=" font-size:11pt; font-weight:600;">%s</
 match_hint = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
 log = data_dir + 'latest.log'
 setting = data_dir + 'setting.tsf'
-public = data_dir + 'public.tsf'
+public = data_dir + 'public.data'
 temp = data_dir + 'temp'
 nontr = ('暂无翻译', 'None Translations')
 dnames = ('Base', 'Long', 'Phrase', 'Proper', 'Term')

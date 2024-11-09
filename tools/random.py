@@ -10,7 +10,7 @@ def all():
         else: break
 
 def inbank():
-    Bank = tool.ui.ui.Bank
+    Bank = tool.mw.ui.Bank
     Bank.current = choice(Bank.items)
 
 def retry():
@@ -18,7 +18,7 @@ def retry():
     dict = choice(dicts)
     ldict = dict[choose(dict)]
     word = choose(ldict)
-    tool.ui.ui.Word_Entry.setText(word)
+    tool.mw.ui.Word_Entry.setText(word)
 
 def choose(dict:dict):
     return list(dict.keys())[randint(0, len(dict)-1)]
