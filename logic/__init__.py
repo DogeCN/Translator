@@ -4,9 +4,9 @@ from libs.translate import translate, online_translate
 from libs.config import Setting
 from libs.tool import load
 from libs.io import dialog
-from .main import UILogic
+from libs.ui.effect import acrylic
 from libs.ui.setting import Ui_Settings
-from pywinstyles import apply_style
+from .main import UILogic
 from threading import Thread
 from time import sleep
 import info
@@ -38,7 +38,7 @@ class LogicFrame:
         self.retrans()
         self.ui.setShotcuts()
         self.ui.load_dicts()
-        apply_style(self.MainWindow, 'acrylic')
+        acrylic(self.MainWindow)
         #Threading
         self.argv = file
         Thread(target=lambda:self.ui.load(file)).start()
@@ -90,7 +90,7 @@ class LogicFrame:
         Setting.dump()
 
     def setting_show(self):
-        apply_style(self.setting, 'acrylic')
+        acrylic(self.setting)
         self.setting_ui.Lang.setCurrentIndex(Setting.Language)
         self.setting_ui.Auto_Save.setChecked(Setting.Auto_save)
         self.setting_ui.Interval.setEnabled(Setting.Auto_save)
