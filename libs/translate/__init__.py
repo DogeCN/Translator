@@ -120,7 +120,7 @@ def translate(word: str) -> Result:
             dict_letter = dictionary['#']
 
         if not dict_letter:
-            for dict_letter in dictionary:
+            for dict_letter in dictionary.values():
                 pres, ratio = match(dict_letter, s)
                 if pres and ratio > max:
                     max = ratio
