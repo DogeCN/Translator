@@ -1,32 +1,30 @@
 from PySide6.QtWidgets import QFileDialog as QFile
-from libs.public import public
+from libs.public import Publics
 
-_get_dir = lambda f: '/'.join(f.split('/')[0:-1]) + '/'
+def rdir(f):
+    if f:
+        rd = f[0] if isinstance(f, list) else f
+        rd = '/'.join(rd.split('/')[0:-1]) + '/'
+        Publics['default_path'] = rd
+        print(rd)
+    return f
 
 def OpenDir(parent=None, title='', dir=None):
-    if not dir: dir = public['default_path']
+    if not dir: dir = Publics['default_path']
     d = QFile.getExistingDirectory(parent, title, dir)
-    if d: public['default_path'] = d
-    else: public['default_path'] = None
-    return d
+    return rdir(d)
 
 def OpenFile(parent=None, title='', type=..., dir=None):
-    if not dir: dir = public['default_path']
+    if not dir: dir = Publics['default_path']
     f, _ = QFile.getOpenFileName(parent, title, dir, type)
-    if f: public['default_path'] = _get_dir(f)
-    else: public['default_path'] = None
-    return f
+    return rdir(f)
 
 def OpenFiles(parent=None, title=None, type=..., dir=None):
-    if not dir: dir = public['default_path']
+    if not dir: dir = Publics['default_path']
     f, _ = QFile.getOpenFileNames(parent, title, dir, type)
-    if f: public['default_path'] = _get_dir(f[0])
-    else: public['default_path'] = None
-    return f
+    return rdir(f)
 
 def SaveFile(parent=None, title='', type=..., dir=None):
-    if not dir: dir = public['default_path']
+    if not dir: dir = Publics['default_path']
     f, _ = QFile.getSaveFileName(parent, title, dir, type)
-    if f: public['default_path'] = _get_dir(f)
-    else: public['default_path'] = None
-    return f
+    return rdir(f)
