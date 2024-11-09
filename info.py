@@ -2,7 +2,7 @@ import os
 
 prog_name = 'Translator'
 prog_name_cn = '翻译器'
-version = 'v1.14.6'
+version = 'v1.14.7'
 data_dir = os.getenv('AppData') + os.sep + prog_name + os.sep
 if not os.path.exists(data_dir):
     os.mkdir(data_dir)
