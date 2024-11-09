@@ -8,12 +8,12 @@ class Public(dict):
         try:
             self.update(load(file))
         except:
-            self['default_path'] = './'
+            self['default_path'] = None
     
     @staticmethod
     def _load(file=data):
-        global public
-        public = Public(file)
+        global Publics
+        Publics = Public(file)
 
     def __setitem__(self, key, value):
         super().__setitem__(key, value)
