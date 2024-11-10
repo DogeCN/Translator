@@ -12,8 +12,9 @@ from time import sleep
 import info
 
 class LMainWindow(QMainWindow):
-    def __init__(self, file=None):
+    def __init__(self, exit, file=None):
         super().__init__()
+        self.exit = exit
         #Window Build
         self.ui = LMain()
         self.ui.setupUi(self)
@@ -157,7 +158,7 @@ class LMainWindow(QMainWindow):
             if Setting.Auto_save:
                 self.ui.save_all(False)
             open(info.running, 'w').write('False\n')
-            exit()
+            self.exit()
         else:
             self.hide()
             evt.ignore()

@@ -22,8 +22,8 @@ def main():
     else:
         open(fr, 'w').write('True\n')
     app = QApplication()
-    LMainWindow(argv)
-    app.exec()
+    LMainWindow(app.exit, argv)
+    sys.exit(app.exec())
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]
