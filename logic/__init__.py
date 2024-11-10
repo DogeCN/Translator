@@ -157,7 +157,7 @@ class LMainWindow(QMainWindow):
             if Setting.Auto_save:
                 self.ui.save_all(False)
             open(info.running, 'w').write('False\n')
-            evt.accept()
+            exit()
         else:
             self.hide()
             evt.ignore()

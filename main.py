@@ -23,7 +23,7 @@ def main():
         open(fr, 'w').write('True\n')
     app = QApplication()
     LMainWindow(argv)
-    sys.exit(app.exec())
+    app.exec()
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]
