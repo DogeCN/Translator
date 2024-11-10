@@ -19,7 +19,6 @@ class Public(dict):
         super().__setitem__(key, value)
         try:
             dump(data, self)
-            print(self['default_path'])
         except: ...
 
 Public._load()

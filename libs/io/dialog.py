@@ -6,7 +6,6 @@ def rdir(f):
         rd = f[0] if isinstance(f, list) else f
         rd = '/'.join(rd.split('/')[0:-1]) + '/'
         Publics['default_path'] = rd
-        print(rd)
     return f
 
 def OpenDir(parent=None, title='', dir=None):

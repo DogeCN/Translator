@@ -7,56 +7,49 @@ class Result:
     match = False
     online = False
 
-    def __init__(self, word:str='', expect:list[str]=['' for i in range(12)]):
+    def __init__(self, word:str='', value:list[str, list[str]]=[*['']*3, []]):
         self.word = word
-        self.expect = expect
-        #keys = ['phonetic','definition','translation','pos','collins','oxford','tag','bnc','frq','exchange','detail','audio']
+        self.value = value
 
     @property
     def translation(self):
-        translation = self.expect[2]
+        translation = self.value[2]
         return translation if translation else info.nontr[0]
     
     @translation.setter
     def translation(self, translation):
-        self.expect[2] = translation
+        self.value[2] = translation
 
     def get_translation(self, lang):
         return self.definition if lang else self.translation
 
     @property
     def definition(self):
-        definition = self.expect[1]
+        definition = self.value[1]
         return definition if definition else info.nontr[1]
 
     @definition.setter
     def definition(self, definition):
-        self.expect[1] = definition
+        self.value[1] = definition
 
     def get_definition(self, lang):
         return self.translation if lang else self.definition
 
     @property
-    def detail(self):
-        words = []
+    def exchanges(self):
         results = []
-        for form in self.expect[9].split('/'):
-            if form:
-                key, word = form.split(':')
-                if key != '1' and word not in words and word != self:
-                    words.append(word)
-                    try: result = translate(word, results+[self])
-                    except: continue
-                    if result:
-                        results.append(result)
+        for form in self.value[3]:
+            result = translate(form)
+            if result:
+                results.append(result)
         return results
 
     @property
-    def info(self):
-        return self.expect[0] #Phonetic
+    def phonetic(self):
+        return self.value[0]
     
     def __bool__(self):
-        return bool(self.expect[2]) and not self.match
+        return bool(self.value[2]) and not self.match
     
     def __eq__(self, value):
         return self.word == value
@@ -84,64 +77,27 @@ def online_translate(word: str) -> Result:
 @fast
 def translate(word: str) -> Result:
     from .dict import dictionaries
-    letter = word[0].lower()
-    for dictionary in dictionaries:
-        if not dictionary.enabled: continue
-
-        if letter.isalpha():
-            if letter in dictionary:
-                dict_letter = dictionary[letter]
-            elif letter.isascii(): continue
-            else:
-                try: _word = api_translate(word, 1)
-                except: return Result(word)
-                result = translate(_word)
-                result.match = True
-                return result
-        else:
-            dict_letter = dictionary['#']
-
-        if word in dict_letter:
-            return Result(word, dict_letter[word])
-        elif word.lower() in dict_letter:
-            return Result(word.lower(), dict_letter[word.lower()])
-
     max = 0.3
     s = SequenceMatcher()
     s.set_seq2(word)
+    result = None
     for dictionary in dictionaries:
         if not dictionary.enabled: continue
-        dict_letter = {}
+        for wp in [word, word.lower(), word.capitalize()]:
+            if wp in dictionary:
+                return Result(word, dictionary[wp])
 
-        if letter.isalpha():
-            if letter in dictionary:
-                dict_letter = dictionary[letter]
-        else:
-            dict_letter = dictionary['#']
+        for wm in dictionary:
+            if wm[0] == word[0]:
+                s.set_seq1(wm)
+                if s.real_quick_ratio() > max and s.quick_ratio() > max:
+                    ratio = s.ratio()
+                    if ratio > max:
+                        result = Result(wm, dictionary[wm])
+                        max = ratio
 
-        if not dict_letter:
-            for dict_letter in dictionary.values():
-                pres, ratio = match(dict_letter, s)
-                if pres and ratio > max:
-                    max = ratio
-                    result = pres
-        else:
-            result, _ = match(dict_letter, s)
-
-    if result:
+    if result is not None:
         result.match = True
+        return result
     else:
-        result = online_translate(word)
-    return result
-
-def match(dict_letter, s:SequenceMatcher):
-    max = 0.3
-    result = None
-    for dict_key in dict_letter:
-        s.set_seq1(dict_key)
-        if s.real_quick_ratio() > max and s.quick_ratio() > max:
-            ratio = s.ratio()
-            if ratio > max:
-                result = Result(dict_key, dict_letter[dict_key])
-                max = ratio
-    return result, max
+        return Result(word)

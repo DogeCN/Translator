@@ -94,7 +94,7 @@ class LMain(Ui_MainWindow):
         word = result.word
         self.Translated_text.setText(result.get_translation(Setting.Language))
         self.Translated_text.setToolTip(result.get_definition(Setting.Language))
-        self.Info.setText(result.info)
+        self.Info.setText(result.phonetic)
         if word in self.Bank.words or not result:
             self.Add.setEnabled(False)
         else:
@@ -126,7 +126,7 @@ class LMain(Ui_MainWindow):
         if result:
             self.Info.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
         self.result = result
-        self.Detail.results = result.detail
+        self.Detail.results = result.exchanges
 
     def text_change(self):
         self.text_changed = True

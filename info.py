@@ -32,7 +32,7 @@ setting = data_dir + 'setting.tsf'
 public = data_dir + 'public.data'
 temp = data_dir + 'temp'
 nontr = ('暂无翻译', 'None Translations')
-dnames = ('Base', 'Long', 'Phrase', 'Proper', 'Term')
+dnames = ('Base', 'Long', 'Phrase', 'Term')
 durl = 'https://raw.githubusercontent.com/DogeCN/Translator/refs/heads/main/dictionaries/%s'
 durl_cn = 'https://ghproxy.cn/' + durl
 

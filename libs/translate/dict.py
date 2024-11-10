@@ -4,7 +4,7 @@ from libs.io.base import load
 import info
 import os
 
-class Dictionary(dict):
+class Dictionary(dict[str, list[str, list[str]]]):
     enabled = True
     def __init__(self, dict, name):
         super().__init__(dict)
@@ -13,7 +13,7 @@ class Dictionary(dict):
     def setEnabled(self, enable):
         self.enabled = enable
 
-dictionaries = [] #type: list[Dictionary[str, dict[str, list]]]
+dictionaries = [] #type: list[Dictionary]
 
 def getfile(name, path):
     try:
@@ -36,7 +36,7 @@ def _load_dict():
 def load_dict(callback):
     _load_dict()
     if not dictionaries:
-        pool = ThreadPoolExecutor(5)
+        pool = ThreadPoolExecutor()
         for dname in info.dnames:
             fname = dname + info.ext_dict
             pool.submit(getfile, fname, info.dicts_dir + fname)

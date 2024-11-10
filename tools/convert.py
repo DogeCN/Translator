@@ -94,7 +94,7 @@ def process():
         stamp = tool.tr('stamp') % (info.version, _getstamp(stamp_format))
         header.add_run(stamp_b + f' ({tool.mw.ui.Bank.count()})' if word_count_b else '')
     for result in tool.mw.ui.Bank.results:
-        information = result.info
+        information = result.phonetic
         word = ''.join(['_' if not word_b and c.isalpha() else c for c in result.word])
         head = word + f' /{information}/' if info_b and information else ''
         p = document.add_paragraph(head + f'\n{result.get_translation(Setting.Language)}' if trans_b else '')
