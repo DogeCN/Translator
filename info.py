@@ -7,6 +7,8 @@ def check_dir(dir):
 
 prog_name = 'Translator'
 prog_name_cn = '翻译器'
+prog_running = True
+online = False
 version = 'v1.14.7'
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
 dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
@@ -18,7 +20,7 @@ debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
 retries = 3
 api_timeout = 3
-bank_max_chars = 15
+max_histories = 100
 running = data_dir + 'running'
 tools = 'tools'
 default_tvf = data_dir + 'vocabulary' + ext_tvf
@@ -116,4 +118,11 @@ UITr = {
     'Save All Files' : '保存所有文件',
     'Online' : '在线',
     'Online Mode' : '在线模式'
+}
+
+dict_names = {
+    ('基本词汇' , 'Base'),
+    ('长词汇', 'Long'),
+    ('短语', 'Phrase'),
+    ('术语', 'Term')
 }

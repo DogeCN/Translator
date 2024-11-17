@@ -7,6 +7,7 @@ class Result:
     top = False
     match = False
     online = False
+    mp = 0
 
     def __init__(self, word:str='', value:list[str, list[str]]=[*['']*3, []]):
         self.word = word
@@ -47,19 +48,17 @@ class Result:
 
     @property
     def phrases(self):
-        phrases = []
         if ' ' in self.word:
             for wp in self.word.split(' '):
                 result = translate(wp)
                 if result:
-                    phrases.append(result)
+                    yield result
         else:
             for dictionary in dictionaries:
                 if not dictionary.enabled: continue
                 for wp in dictionary:
                     if ' ' in wp and self.word in wp.split(' '):
-                        phrases.append(Result(wp, dictionary[wp]))
-        return phrases
+                        yield Result(wp, dictionary[wp])
 
     @property
     def phonetic(self):
@@ -76,10 +75,11 @@ class Result:
         return info.htip_hint % (info.Tr['htip'][lang] % self.word, trans_html)
 
 def fast(func):
-    def wrapper(word: str, Results: list[Result] = []) -> Result:
-        for result in Results:
-            if result == word:
-                return result
+    def wrapper(word: str, *res_lists: list[Result]) -> Result:
+        for res_list in res_lists:
+            for res in res_list:
+                if res == word:
+                    return res
         return func(word)
     return wrapper
 
@@ -117,3 +117,9 @@ def translate(word: str) -> Result:
         return result
     else:
         return Result(word)
+
+def trans(word: str, *res_lists):
+    if info.online:
+        return online_translate(word, *res_lists)
+    else:
+        return translate(word, *res_lists)

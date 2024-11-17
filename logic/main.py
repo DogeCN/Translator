@@ -9,12 +9,14 @@ from libs.config import Setting
 from libs.io import dialog
 from win32com.client import Dispatch
 from threading import Thread
+from time import sleep
 import webbrowser, win32clipboard, info
 
 class LSignal(QObject):
     set_result_singal = Signal()
     callback_singal = Signal()
     show_dicts_singal = Signal(list)
+    expand_phrases_singal = Signal(Result)
     def __init__(self):
         super().__init__()
 
@@ -24,6 +26,7 @@ class LMain(Ui_MainWindow):
     _result = Result()
     signal = LSignal()
     dl_thread = Thread()
+    phrases = None
     closing = False
     parent = None
     raw = None
@@ -38,12 +41,14 @@ class LMain(Ui_MainWindow):
     def close(self): self.closing = True; self.parent.close()
     def remove(self): self.Bank.remove(); self.Files.keep()
     def top(self): self.Bank.top(); self.Files.keep()
+    def set_expand(self, results): self.Expand.results = results
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
         self.raw.setStyleSheet(info.StlSheets['raw'])
+        Thread(target=self.handle_phrases).start()
         self.connect_actions()
     
     def connect_actions(self):
@@ -77,6 +82,7 @@ class LMain(Ui_MainWindow):
         self.signal.set_result_singal.connect(self.set_result)
         self.signal.show_dicts_singal.connect(self.show_dictionaries)
         self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, Setting.getTr('warning'), Setting.getTr('translate_function_unavailable')))
+        self.signal.expand_phrases_singal.connect(self.set_expand)
 
     def setShotcuts(self):
         self.Add.setShortcut(Setting.Key_Add)
@@ -104,7 +110,7 @@ class LMain(Ui_MainWindow):
             if a.isCheckable():
                 self.menuDicts.removeAction(a)
         for d in dicts:
-            action = QAction(d.name, self.parent)
+            action = QAction(Setting.translateUI(d.name, dict([reversed(dn) for dn in info.dict_names])), self.parent)
             action.setCheckable(True)
             action.setChecked(True)
             action.triggered.connect(lambda *x, _d=d, a=action:_d.setEnabled(a.isChecked()))
@@ -131,7 +137,23 @@ class LMain(Ui_MainWindow):
             self.Phonetic.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
         self.result = result
         self.Exchanges.results = result.exchanges
-        self.Expand.results = result.phrases
+        self.phrases = result.phrases
+
+    def handle_phrases(self):
+        while info.prog_running:
+            if self.parent.isActiveWindow():
+                if self.phrases:
+                    phrases = []
+                    for p in self.phrases:
+                        phrases.append(p)
+                        if self.text_changed:
+                            break
+                    else:
+                        self.signal.expand_phrases_singal.emit(phrases)
+                        self.phrases = None
+                sleep(0.05)
+            else:
+                sleep(0.5)
 
     def text_change(self):
         self.text_changed = True
@@ -140,8 +162,6 @@ class LMain(Ui_MainWindow):
         self.Translated_text.setToolTip('')
         self.Phonetic.setText('')
         self.Phonetic.setToolTip('')
-        self.Exchanges.clear()
-        self.Expand.clear()
 
     def command_add(self):
         self.append(self.result)

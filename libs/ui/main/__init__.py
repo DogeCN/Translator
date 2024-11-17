@@ -13,7 +13,7 @@ class Ui_MainWindow:
     def setupUi(self, MainWindow:QMainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(750, 450)
+        MainWindow.resize(800, 500)
         MainWindow.setWindowIcon(self.icon)
         self.actionReload = QAction(MainWindow)
         self.actionReload.setObjectName(u"actionReload")
@@ -98,6 +98,8 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Word_Entry, 0, 0, 1, 1)
 
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.Add = QPushButton(self.centralwidget)
         self.Add.setObjectName(u"Add")
         self.Add.setEnabled(False)
@@ -108,35 +110,7 @@ class Ui_MainWindow:
         icon13 = QIcon(QIcon.fromTheme(u"list-add"))
         self.Add.setIcon(icon13)
 
-        self.gridLayout.addWidget(self.Add, 0, 1, 1, 1)
-
-        self.Bank = Bank(self.centralwidget)
-        self.Bank.setObjectName(u"Bank")
-        self.Bank.setMinimumSize(QSize(128, 0))
-        self.Bank.setMaximumSize(QSize(128, 16777215))
-        self.Bank.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
-        self.Bank.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(85, 255, 255);}QListWidget{font: 10pt;color: rgb(85, 255, 255);}")
-        self.Bank.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.Bank.setAutoScroll(False)
-        self.Bank.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.Bank.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
-        self.Bank.setSortingEnabled(True)
-
-        self.gridLayout.addWidget(self.Bank, 0, 2, 5, 1)
-
-        self.Expand = Bank(self.centralwidget)
-        self.Expand.setObjectName(u"Expand")
-        self.Expand.setMinimumSize(QSize(128, 0))
-        self.Expand.setMaximumSize(QSize(150, 16777215))
-        self.Expand.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
-        self.Expand.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(200, 200, 25);}QListWidget{font: 10pt;color: rgb(200, 200, 25);}")
-        self.Expand.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.Expand.setAutoScroll(False)
-        self.Expand.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.Expand.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
-        self.Expand.setSortingEnabled(True)
-
-        self.gridLayout.addWidget(self.Expand, 0, 3, 5, 1)
+        self.verticalLayout_2.addWidget(self.Add)
 
         self.Top = QPushButton(self.centralwidget)
         self.Top.setObjectName(u"Top")
@@ -148,7 +122,7 @@ class Ui_MainWindow:
         icon14 = QIcon(QIcon.fromTheme(u"appointment-new"))
         self.Top.setIcon(icon14)
 
-        self.gridLayout.addWidget(self.Top, 1, 1, 1, 1)
+        self.verticalLayout_2.addWidget(self.Top)
 
         self.Delete = QPushButton(self.centralwidget)
         self.Delete.setObjectName(u"Delete")
@@ -160,31 +134,72 @@ class Ui_MainWindow:
         icon15 = QIcon(QIcon.fromTheme(u"edit-delete"))
         self.Delete.setIcon(icon15)
 
-        self.gridLayout.addWidget(self.Delete, 2, 1, 1, 1)
+        self.verticalLayout_2.addWidget(self.Delete)
 
-        self.Exchanges = Bank(self.centralwidget)
+        self.gridLayout.addLayout(self.verticalLayout_2, 0, 1, 2, 1)
+
+        self.Bank = Bank(self.centralwidget)
+        self.Bank.setObjectName(u"Bank")
+        self.Bank.setMinimumSize(QSize(128, 0))
+        self.Bank.setMaximumSize(QSize(128, 16777215))
+        self.Bank.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.Bank.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(85, 255, 255);}QListWidget{font: 10pt;color: rgb(85, 255, 255);}")
+        self.Bank.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Bank.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Bank.setAutoScroll(False)
+        self.Bank.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Bank.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.Bank.setSortingEnabled(True)
+
+        self.gridLayout.addWidget(self.Bank, 0, 2, 2, 1)
+
+        self.splitter = QSplitter(self.centralwidget)
+        self.splitter.setObjectName(u"splitter")
+        self.splitter.setOrientation(Qt.Orientation.Vertical)
+        self.Exchanges = Bank(self.splitter)
         self.Exchanges.setObjectName(u"Exchanges")
         self.Exchanges.setMinimumSize(QSize(128, 0))
         self.Exchanges.setMaximumSize(QSize(128, 16777215))
         self.Exchanges.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.Exchanges.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(170, 255, 127);}QListWidget{font: 10pt;color: rgb(170, 255, 127);}")
         self.Exchanges.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Exchanges.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Exchanges.setAutoScroll(False)
         self.Exchanges.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Exchanges.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.Exchanges.setSortingEnabled(True)
-
-        self.gridLayout.addWidget(self.Exchanges, 3, 1, 1, 1)
-
-        self.Files = Files(self.centralwidget, self.Bank)
+        self.splitter.addWidget(self.Exchanges)
+        self.Files = Files(self.splitter, self.Bank)
         self.Files.setObjectName(u"Files")
         self.Files.setMinimumSize(QSize(128, 51))
         self.Files.setMaximumSize(QSize(128, 16777215))
         self.Files.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.Files.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(255, 85, 255);}QListWidget{font: 10pt;color: rgb(255, 85, 255);}")
         self.Files.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Files.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Files.setAutoScroll(False)
         self.Files.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.Files.setDragDropMode(QAbstractItemView.DragDropMode.DropOnly)
+        self.Files.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.splitter.addWidget(self.Files)
 
-        self.gridLayout.addWidget(self.Files, 4, 1, 1, 1)
+        self.verticalLayout_2.addWidget(self.splitter)
+
+
+        self.Expand = Bank(self.centralwidget)
+        self.Expand.setObjectName(u"Expand")
+        self.Expand.setMinimumSize(QSize(128, 0))
+        self.Expand.setMaximumSize(QSize(150, 16777215))
+        self.Expand.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.Expand.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(200, 200, 25);}QListWidget{font: 10pt;color: rgb(200, 200, 25);}")
+        self.Expand.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Expand.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Expand.setAutoScroll(False)
+        self.Expand.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Expand.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.Expand.setSortingEnabled(True)
+
+        self.gridLayout.addWidget(self.Expand, 0, 3, 2, 1)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -208,12 +223,12 @@ class Ui_MainWindow:
         self.verticalLayout.addWidget(self.Phonetic)
 
 
-        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 4, 1)
+        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 720, 33))
+        self.menuBar.setGeometry(QRect(0, 0, 800, 33))
         self.menuBar.setStyleSheet(u"QMenu{background-color: rgba(30, 30, 30, 100);border-radius:10px;}")
         self.menuFile = QMenu(self.menuBar)
         self.menuFile.setObjectName(u"menuFile")

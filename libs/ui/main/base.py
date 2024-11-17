@@ -18,18 +18,7 @@ class BaseListWidget(QtWidgets.QListWidget):
         super().addItem(item)
         self.update()
 
-class BaseListWidgetItem(QtWidgets.QListWidgetItem):
-    def __init__(self, text:str=''):
-        super().__init__(self._limited(text))
-    
-    def setText(self, text:str):
-        super().setText(self._limited(text))
-
-    @staticmethod
-    def _limited(text):
-        if len(text) > info.bank_max_chars:
-            return text[:info.bank_max_chars] + '...'
-        return text
+class BaseListWidgetItem(QtWidgets.QListWidgetItem): ...
 
 class LItem(BaseListWidgetItem):
     def __init__(self, result:Result, lang):

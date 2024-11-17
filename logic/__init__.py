@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
-from libs.translate import translate, online_translate
+from libs.translate import trans
 from libs.config import Setting
 from libs.tool import load
 from libs.io import dialog
@@ -29,9 +29,6 @@ class LMainWindow(QMainWindow):
         self.setting = QDialog(self)
         self.setting_ui = Ui_Settings()
         self.setting_ui.setupUi(self.setting)
-        #Variable
-        self.online = False
-        self.running = True
         #UI
         self.connect_actions()
         self.retrans()
@@ -111,18 +108,20 @@ class LMainWindow(QMainWindow):
             else: self.ui.menuTools.addAction(action)
 
     def command_online(self):
-        if self.online:
-            self.online = False
-            self.ui.menuDicts.setEnabled(True)
-        else:
-            self.online = True
-            self.ui.menuDicts.setEnabled(False)
+        self.ui.menuDicts.setEnabled(info.online)
+        info.online = not info.online
 
     def retrans(self, lang=None):
         if lang is not None:
             Setting.Language = lang
         self.setting_ui.retranslateUi(self.setting)
         self.ui.retranslateUi(self)
+        for action in self.ui.menuDicts.actions()[2:]:
+            text = action.text()
+            for dn in info.dict_names:
+                if text in dn:
+                    action.setText(dn[Setting.Language])
+                    break
         self.ui.Bank.lang = \
         self.ui.Exchanges.lang = \
         self.ui.Expand.lang = Setting.Language
@@ -133,9 +132,9 @@ class LMainWindow(QMainWindow):
 
     def auto_translate(self):
         tick = 0
-        while self.running:
+        while info.prog_running:
             #Auto Translate
-            if self.isActiveWindow():
+            if self.isActiveWindow() or self.setting.isActiveWindow():
                 ticking = tick > 20
                 if self.ui.text_changed or ticking:
                     tick = 0
@@ -144,7 +143,7 @@ class LMainWindow(QMainWindow):
                     if word != '':
                         if (not ticking) and (word not in self.ui.Bank.words):
                             self.ui.Bank.roll(word)
-                        self.ui._result = online_translate(word, self.ui.Bank.results) if self.online else translate(word, self.ui.Bank.results)
+                        self.ui._result = trans(word, self.ui.Bank.results, self.ui.Exchanges.results, self.ui.Expand.results)
                         if self.ui.text_changed:
                             continue
                         self.ui.signal.set_result_singal.emit()
@@ -155,7 +154,7 @@ class LMainWindow(QMainWindow):
 
     def closeEvent(self, evt:QEvent):
         if self.ui.closing:
-            self.running = False
+            info.prog_running = False
             if Setting.Auto_save:
                 self.ui.save_all(False)
             self.exit()
