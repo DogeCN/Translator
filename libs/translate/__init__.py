@@ -39,12 +39,10 @@ class Result:
 
     @property
     def exchanges(self):
-        results = []
         for form in self.value[3]:
             result = translate(form)
             if result:
-                results.append(result)
-        return results
+                yield result
 
     @property
     def phrases(self):

@@ -16,7 +16,8 @@ class LSignal(QObject):
     set_result_singal = Signal()
     callback_singal = Signal()
     show_dicts_singal = Signal(list)
-    expand_phrases_singal = Signal(Result)
+    exchange_singal = Signal(Result)
+    expand_singal = Signal(Result)
     def __init__(self):
         super().__init__()
 
@@ -26,6 +27,7 @@ class LMain(Ui_MainWindow):
     _result = Result()
     signal = LSignal()
     dl_thread = Thread()
+    exchanges = None
     phrases = None
     closing = False
     parent = None
@@ -42,13 +44,14 @@ class LMain(Ui_MainWindow):
     def remove(self): self.Bank.remove(); self.Files.keep()
     def top(self): self.Bank.top(); self.Files.keep()
     def set_expand(self, results): self.Expand.results = results
+    def set_exchanges(self, results): self.Exchanges.results = results
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
         self.raw.setStyleSheet(info.StlSheets['raw'])
-        Thread(target=self.handle_phrases).start()
+        Thread(target=self.handle).start()
         self.connect_actions()
     
     def connect_actions(self):
@@ -82,7 +85,8 @@ class LMain(Ui_MainWindow):
         self.signal.set_result_singal.connect(self.set_result)
         self.signal.show_dicts_singal.connect(self.show_dictionaries)
         self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, Setting.getTr('warning'), Setting.getTr('translate_function_unavailable')))
-        self.signal.expand_phrases_singal.connect(self.set_expand)
+        self.signal.exchange_singal.connect(self.set_exchanges)
+        self.signal.expand_singal.connect(self.set_expand)
 
     def setShotcuts(self):
         self.Add.setShortcut(Setting.Key_Add)
@@ -132,25 +136,34 @@ class LMain(Ui_MainWindow):
         if result.match:
             self.Translated_text.setText(result.get_tip(Setting.Language))
             self.Translated_text.setToolTip(Setting.getTr('correct_hint'))
-            return   
+            return
         if result:
             self.Phonetic.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
         self.result = result
-        self.Exchanges.results = result.exchanges
+        self.exchanges = result.exchanges
         self.phrases = result.phrases
 
-    def handle_phrases(self):
+    def _handle(self, generator):
+        if generator:
+            results = []
+            for r in generator:
+                results.append(r)
+                if self.text_changed:
+                    break
+            else:
+                return results
+
+    def handle(self):
         while info.prog_running:
             if self.parent.isActiveWindow():
-                if self.phrases:
-                    phrases = []
-                    for p in self.phrases:
-                        phrases.append(p)
-                        if self.text_changed:
-                            break
-                    else:
-                        self.signal.expand_phrases_singal.emit(phrases)
-                        self.phrases = None
+                exchanges = self._handle(self.exchanges)
+                if exchanges is not None:
+                    self.signal.exchange_singal.emit(exchanges)
+                    self.exchanges = None
+                phrases = self._handle(self.phrases)
+                if phrases is not None:
+                    self.signal.expand_singal.emit(phrases)
+                    self.phrases = None
                 sleep(0.05)
             else:
                 sleep(0.5)
