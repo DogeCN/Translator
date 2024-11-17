@@ -1,21 +1,24 @@
 import os
 
+def check_dir(dir):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    return dir
+
 prog_name = 'Translator'
 prog_name_cn = '翻译器'
 version = 'v1.14.7'
-data_dir = os.getenv('AppData') + os.sep + prog_name + os.sep
-if not os.path.exists(data_dir):
-    os.mkdir(data_dir)
-dicts_dir = data_dir + 'dictionaries'  + os.sep
-if not os.path.exists(dicts_dir):
-    os.mkdir(dicts_dir)
+data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
+dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
 ext_self_exe = '.exe'
 debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
+retries = 3
 api_timeout = 3
+bank_max_chars = 15
 running = data_dir + 'running'
 tools = 'tools'
 default_tvf = data_dir + 'vocabulary' + ext_tvf
@@ -81,8 +84,9 @@ UITr = {
     'Translations' : '翻译',
     'Top the Words' : '置顶单词',
     'Delete the Words' : '删除已选单词',
-    'Detail' : '变形',
-    'Infomations' : '信息',
+    'Exchanges' : '变形',
+    'Phonetic' : '音标',
+    'Expand' : '扩展',
     'File' : '文件',
     'Tools' : '工具',
     'Settings' : '设置',

@@ -3,14 +3,14 @@ from libs.translate import Result
 from libs.config import Setting
 from libs.io import io, dialog
 import info
-import os
 
 TOP = QtWidgets.QAbstractItemView.ScrollHint.PositionAtTop
 
 class BaseListWidget(QtWidgets.QListWidget):
 
     def update(self):
-        r = self.statusTip().split()[0]
+        st = self.statusTip()
+        r = st.split()[0] if st else ''
         n = self.count()
         self.setStatusTip(f'{r} ({n})' if n > 0 else r)
     
@@ -18,7 +18,20 @@ class BaseListWidget(QtWidgets.QListWidget):
         super().addItem(item)
         self.update()
 
-class LItem(QtWidgets.QListWidgetItem):
+class BaseListWidgetItem(QtWidgets.QListWidgetItem):
+    def __init__(self, text:str=''):
+        super().__init__(self._limited(text))
+    
+    def setText(self, text:str):
+        super().setText(self._limited(text))
+
+    @staticmethod
+    def _limited(text):
+        if len(text) > info.bank_max_chars:
+            return text[:info.bank_max_chars] + '...'
+        return text
+
+class LItem(BaseListWidgetItem):
     def __init__(self, result:Result, lang):
         super().__init__(result.word)
         self.word = result.word
@@ -109,7 +122,6 @@ class Bank(BaseListWidget):
         self.clear()
         for i in items:
             self.addItem(i)
-        self.scrollToTop()
 
     @property
     def selections(self) -> list[LItem]:
@@ -130,22 +142,23 @@ class Bank(BaseListWidget):
     
     @results.setter
     def results(self, results):
-        self.items = [LItem(i, self.lang) for i in results]
+        if results != self.results:
+            self.items = [LItem(i, self.lang) for i in results]
 
     @property
     def words(self):
         return [i.word for i in self.items]
 
-class FItem(QtWidgets.QListWidgetItem):
+class FItem(BaseListWidgetItem):
     _results = None
-    _saved = False
+    _saved = True
     _file = ''
     _name = ''
     on_display = False
 
     def __init__(self, file:str):
         super().__init__()
-        self.file = os.path.abspath(file)
+        self.file = info.os.path.abspath(file)
         self.setBackground(QtGui.QColor(255, 100, 255, 30))
     
     @property
@@ -187,17 +200,16 @@ class FItem(QtWidgets.QListWidgetItem):
         self._saved = value
 
     def exists(self, file=None):
-        return os.path.exists(file if file else self.file)
+        return info.os.path.exists(file if file else self.file)
 
     def load(self):
         if self.exists():
             self.results = io.read_vocabulary(self.file)
-            self.saved = True
         else: self.results = []
     
-    def save(self):
+    def save(self, silent=False):
         if not self.saved:
-            if not self.exists():
+            if not silent and not self.exists():
                 self.save_as(self.file)
             else:
                 io.save_vocabulary(self.results, self.file)
@@ -222,7 +234,7 @@ class Files(BaseListWidget):
         if isinstance(file, list):
             return [self.load(f) for f in file]
         else:
-            file = os.path.abspath(file).replace('\\', '/')
+            file = info.os.path.abspath(file).replace('\\', '/')
             for item in self.items:
                 if item.file == file:
                     item.load()
@@ -244,7 +256,7 @@ class Files(BaseListWidget):
     def new(self, fn=None):
         if not fn:
             fn = 'untitled%s' + info.ext_tvf
-            lfn = lambda fn:fn in self.names or os.path.exists(fn)
+            lfn = lambda fn:fn in self.names or info.os.path.exists(fn)
             if lfn(fn%''):
                 i = 2
                 while lfn(fn%f'({i})'):

@@ -9,8 +9,7 @@ from libs.config import Setting
 from libs.io import dialog
 from win32com.client import Dispatch
 from threading import Thread
-import webbrowser
-import info
+import webbrowser, win32clipboard, info
 
 class LSignal(QObject):
     set_result_singal = Signal()
@@ -33,7 +32,8 @@ class LMain(Ui_MainWindow):
         if self.dl_thread.is_alive(): return
         self.dl_thread = Thread(target=lambda:self.signal.show_dicts_singal.emit(load_dict(self.signal.callback_singal.emit)))
         self.dl_thread.start()
-    def save_all(self, silent=True): [item.save() for item in self.Files.items if silent and item.exists()]
+    def save_all(self, silent=True):
+        for item in self.Files.items: item.save(silent)
     def append(self, result): self.Bank.append(result); self.Files.keep()
     def close(self): self.closing = True; self.parent.close()
     def remove(self): self.Bank.remove(); self.Files.keep()
@@ -44,8 +44,6 @@ class LMain(Ui_MainWindow):
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
         self.raw.setStyleSheet(info.StlSheets['raw'])
-        self.Bank.lang = Setting.Language
-        self.Detail.lang = Setting.Language
         self.connect_actions()
     
     def connect_actions(self):
@@ -69,11 +67,12 @@ class LMain(Ui_MainWindow):
         #Text
         self.Word_Entry.textChanged.connect(self.text_change)
         self.Translated_text.mouseDoubleClickEvent = self.correct
-        self.Info.mouseDoubleClickEvent = lambda *evt:Thread(target=lambda:self._voice.Speak(self.Word_Entry.text()) if self.result else ..., daemon=True).start()
+        self.Phonetic.mouseDoubleClickEvent = lambda *evt:Thread(target=lambda:self._voice.Speak(self.Word_Entry.text()) if self.result else ..., daemon=True).start()
         #List Widgets
         self.Files.itemSelectionChanged.connect(self.display_file)
         self.Bank.itemSelectionChanged.connect(self.display_selection)
-        self.Detail.itemSelectionChanged.connect(self.display_detail)
+        self.Exchanges.itemSelectionChanged.connect(self.display_exchanges)
+        self.Expand.itemSelectionChanged.connect(self.display_phrases)
         #Signal
         self.signal.set_result_singal.connect(self.set_result)
         self.signal.show_dicts_singal.connect(self.show_dictionaries)
@@ -94,7 +93,7 @@ class LMain(Ui_MainWindow):
         word = result.word
         self.Translated_text.setText(result.get_translation(Setting.Language))
         self.Translated_text.setToolTip(result.get_definition(Setting.Language))
-        self.Info.setText(result.phonetic)
+        self.Phonetic.setText(result.phonetic)
         if word in self.Bank.words or not result:
             self.Add.setEnabled(False)
         else:
@@ -116,6 +115,11 @@ class LMain(Ui_MainWindow):
         if result.match:
             self.Word_Entry.setText(result.word)
             result.match = False
+        elif result:
+            win32clipboard.OpenClipboard()
+            win32clipboard.EmptyClipboard()
+            win32clipboard.SetClipboardText(result.get_translation(Setting.Language))
+            win32clipboard.CloseClipboard()
 
     def set_result(self):
         result = self.result
@@ -124,18 +128,20 @@ class LMain(Ui_MainWindow):
             self.Translated_text.setToolTip(Setting.getTr('correct_hint'))
             return   
         if result:
-            self.Info.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
+            self.Phonetic.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
         self.result = result
-        self.Detail.results = result.exchanges
+        self.Exchanges.results = result.exchanges
+        self.Expand.results = result.phrases
 
     def text_change(self):
         self.text_changed = True
         self.Add.setEnabled(False)
         self.Translated_text.setText('')
         self.Translated_text.setToolTip('')
-        self.Info.setText('')
-        self.Info.setToolTip('')
-        self.Detail.clear()
+        self.Phonetic.setText('')
+        self.Phonetic.setToolTip('')
+        self.Exchanges.clear()
+        self.Expand.clear()
 
     def command_add(self):
         self.append(self.result)
@@ -161,13 +167,20 @@ class LMain(Ui_MainWindow):
             self.Delete.setEnabled(False)
             self.Top.setEnabled(False)
     
-    def display_detail(self):
-        items = self.Detail.selections
+    def display_exchanges(self):
+        items = self.Exchanges.selections
         if items:
-            item = self.Detail.current
+            item = self.Exchanges.current
             item = item if item else items[-1]
             self.Word_Entry.setText(item.word)
     
+    def display_phrases(self):
+        items = self.Expand.selections
+        if items:
+            item = self.Expand.current
+            item = item if item else items[-1]
+            self.Word_Entry.setText(item.word)
+
     def display_file(self):
         item = self.Files.current
         if not item.on_display:

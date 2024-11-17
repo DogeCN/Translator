@@ -27,7 +27,11 @@ _getstamp = lambda f:time.strftime(f, time.localtime())
 
 #Redefine the print function
 def print(rstr:str, *attr):
-    fstr = '\033[%sm'
-    attr = ';'.join([str(Attr[a]) for a in attr])
-    if stdout: stdout.write(f"{fstr%attr}{rstr}{fstr%Attr['Reset']}\n")
-    else: open(log, 'a', encoding='utf-8').write(f"{_getstamp('[%H:%M:%S]')} {rstr}\n")
+    if '\n' in rstr:
+        for r in rstr.split('\n'):
+            print(r, *attr)
+    else:
+        fstr = '\033[%sm'
+        attr = ';'.join([str(Attr[a]) for a in attr])
+        if stdout: stdout.write(f"{fstr%attr}{rstr}{fstr%Attr['Reset']}\n")
+        else: open(log, 'a', encoding='utf-8').write(f"{_getstamp('[%H:%M:%S]')} {rstr}\n")

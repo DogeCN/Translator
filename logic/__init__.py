@@ -63,13 +63,13 @@ class LMainWindow(QMainWindow):
         return timer
 
     def check_running(self):
-        action = open(info.running).read().split('\n')[1]
+        action = open(info.running).readline().strip()
         if action:
-            if action != 'Show':
+            if action != 'Show' and info.os.path.exists(action):
                 self.ui.load(action)
             self.activateWindow()
             self.showNormal()
-        open(info.running, 'w').write('True\n')
+        open(info.running, 'w').write('')
 
     def tray_activated(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
@@ -123,8 +123,9 @@ class LMainWindow(QMainWindow):
             Setting.Language = lang
         self.setting_ui.retranslateUi(self.setting)
         self.ui.retranslateUi(self)
-        self.ui.Bank.lang = Setting.Language
-        self.ui.Detail.lang = Setting.Language
+        self.ui.Bank.lang = \
+        self.ui.Exchanges.lang = \
+        self.ui.Expand.lang = Setting.Language
         title = f'{self.windowTitle()} {info.version}'
         self.setWindowTitle(title)
         self.tray.setToolTip(title)
@@ -157,7 +158,6 @@ class LMainWindow(QMainWindow):
             self.running = False
             if Setting.Auto_save:
                 self.ui.save_all(False)
-            open(info.running, 'w').write('False\n')
             self.exit()
         else:
             self.hide()

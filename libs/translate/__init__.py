@@ -1,5 +1,6 @@
 from difflib import SequenceMatcher
 from .api import api_translate
+from .dict import dictionaries
 import info
 
 class Result:
@@ -45,6 +46,22 @@ class Result:
         return results
 
     @property
+    def phrases(self):
+        phrases = []
+        if ' ' in self.word:
+            for wp in self.word.split(' '):
+                result = translate(wp)
+                if result:
+                    phrases.append(result)
+        else:
+            for dictionary in dictionaries:
+                if not dictionary.enabled: continue
+                for wp in dictionary:
+                    if ' ' in wp and self.word in wp.split(' '):
+                        phrases.append(Result(wp, dictionary[wp]))
+        return phrases
+
+    @property
     def phonetic(self):
         return self.value[0]
     
@@ -76,7 +93,6 @@ def online_translate(word: str) -> Result:
 
 @fast
 def translate(word: str) -> Result:
-    from .dict import dictionaries
     max = 0.3
     s = SequenceMatcher()
     s.set_seq2(word)

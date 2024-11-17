@@ -16,8 +16,7 @@ def inbank():
 def retry():
     dicts = [d for d in dictionaries if d.enabled]
     dict = choice(dicts)
-    ldict = dict[choose(dict)]
-    word = choose(ldict)
+    word = choose(dict)
     tool.mw.ui.Word_Entry.setText(word)
 
 def choose(dict:dict):

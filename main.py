@@ -1,26 +1,20 @@
 from PySide6.QtWidgets import QApplication
-import sys, time, ctypes, winreg
+import sys, time, ctypes, winreg, traceback
 from logic import LMainWindow
 from libs.stdout import print
 import info
 
 print(f'{info.prog_name} {info.version} By Doge', 'Yellow', 'Bold')
-print('Starting...', 'Green', 'Bold')
+print('Starting...\n', 'Green', 'Bold')
 
 def main():
     argv = sys.argv[1] if len(sys.argv) > 1 else None
     fr = info.running
-    try:
-        difftime = time.time() - info.os.path.getatime(fr)
-        lines = open(fr).readlines()
-        running = lines[0] == 'True\n' and difftime < 1
-    except: running = False
-    if running:
+    difftime = time.time() - info.os.path.getatime(fr)
+    if difftime < 1:
         if argv:  open(fr, 'a').write(f'{argv}\n')
         else: open(fr, 'a').write('Show\n')
         sys.exit()
-    else:
-        open(fr, 'w').write('True\n')
     app = QApplication()
     LMainWindow(app.exit, argv)
     sys.exit(app.exec())
@@ -38,10 +32,10 @@ if info.debug:
     main()
 else:
     register()
-    for retry in range(1, 6):
+    for retry in range(0, info.retries+1):
         try: main()
         except Exception as e:
-            print(f'Error: {e}', 'Red', 'Bold')
+            print(f"Error: {''.join(traceback.format_exception(e))}", 'Red', 'Bold')
             time.sleep(1)
-            print(f'Restarting... ({retry}/5)', 'Yellow', 'Bold')
-        else: break
+            if retry < info.retries:
+                print(f'Restarting... ({retry+1}/{info.retries})', 'Yellow', 'Bold')

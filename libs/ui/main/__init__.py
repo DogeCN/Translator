@@ -13,7 +13,7 @@ class Ui_MainWindow:
     def setupUi(self, MainWindow:QMainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(550, 350)
+        MainWindow.resize(750, 450)
         MainWindow.setWindowIcon(self.icon)
         self.actionReload = QAction(MainWindow)
         self.actionReload.setObjectName(u"actionReload")
@@ -124,29 +124,19 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Bank, 0, 2, 5, 1)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.Translated_text = QLabel(self.centralwidget)
-        self.Translated_text.setObjectName(u"Translated_text")
-        self.Translated_text.setMinimumSize(QSize(0, 117))
-        self.Translated_text.setStyleSheet(u"QLabel{font: 75 12pt;color: rgb(0, 170, 255);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(0, 170, 255);}")
-        self.Translated_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.Translated_text.setWordWrap(True)
+        self.Expand = Bank(self.centralwidget)
+        self.Expand.setObjectName(u"Expand")
+        self.Expand.setMinimumSize(QSize(128, 0))
+        self.Expand.setMaximumSize(QSize(150, 16777215))
+        self.Expand.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.Expand.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(200, 200, 25);}QListWidget{font: 10pt;color: rgb(200, 200, 25);}")
+        self.Expand.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Expand.setAutoScroll(False)
+        self.Expand.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Expand.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.Expand.setSortingEnabled(True)
 
-        self.verticalLayout.addWidget(self.Translated_text)
-
-        self.Info = QLabel(self.centralwidget)
-        self.Info.setObjectName(u"Info")
-        self.Info.setMinimumSize(QSize(172, 42))
-        self.Info.setMaximumSize(QSize(16777215, 42))
-        self.Info.setStyleSheet(u"QLabel{font: 700 12pt;color: rgb(255, 170, 0);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(255, 170, 0);}")
-        self.Info.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.Info.setWordWrap(True)
-
-        self.verticalLayout.addWidget(self.Info)
-
-
-        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 4, 1)
+        self.gridLayout.addWidget(self.Expand, 0, 3, 5, 1)
 
         self.Top = QPushButton(self.centralwidget)
         self.Top.setObjectName(u"Top")
@@ -172,17 +162,17 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Delete, 2, 1, 1, 1)
 
-        self.Detail = Bank(self.centralwidget)
-        self.Detail.setObjectName(u"Detail")
-        self.Detail.setMinimumSize(QSize(128, 97))
-        self.Detail.setMaximumSize(QSize(128, 97))
-        self.Detail.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
-        self.Detail.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(170, 255, 127);}QListWidget{font: 10pt;color: rgb(170, 255, 127);}")
-        self.Detail.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.Detail.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.Detail.setSortingEnabled(True)
+        self.Exchanges = Bank(self.centralwidget)
+        self.Exchanges.setObjectName(u"Exchanges")
+        self.Exchanges.setMinimumSize(QSize(128, 0))
+        self.Exchanges.setMaximumSize(QSize(128, 16777215))
+        self.Exchanges.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.Exchanges.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(170, 255, 127);}QListWidget{font: 10pt;color: rgb(170, 255, 127);}")
+        self.Exchanges.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.Exchanges.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Exchanges.setSortingEnabled(True)
 
-        self.gridLayout.addWidget(self.Detail, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.Exchanges, 3, 1, 1, 1)
 
         self.Files = Files(self.centralwidget, self.Bank)
         self.Files.setObjectName(u"Files")
@@ -196,10 +186,34 @@ class Ui_MainWindow:
 
         self.gridLayout.addWidget(self.Files, 4, 1, 1, 1)
 
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.Translated_text = QLabel(self.centralwidget)
+        self.Translated_text.setObjectName(u"Translated_text")
+        self.Translated_text.setMinimumSize(QSize(0, 117))
+        self.Translated_text.setStyleSheet(u"QLabel{font: 75 12pt;color: rgb(0, 170, 255);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(0, 170, 255);}")
+        self.Translated_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.Translated_text.setWordWrap(True)
+
+        self.verticalLayout.addWidget(self.Translated_text)
+
+        self.Phonetic = QLabel(self.centralwidget)
+        self.Phonetic.setObjectName(u"Phonetic")
+        self.Phonetic.setMinimumSize(QSize(172, 42))
+        self.Phonetic.setMaximumSize(QSize(16777215, 42))
+        self.Phonetic.setStyleSheet(u"QLabel{font: 700 12pt;color: rgb(255, 170, 0);}QToolTip{background-color: rgba(30,30,30,100);color: rgb(255, 170, 0);}")
+        self.Phonetic.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.Phonetic.setWordWrap(True)
+
+        self.verticalLayout.addWidget(self.Phonetic)
+
+
+        self.gridLayout.addLayout(self.verticalLayout, 1, 0, 4, 1)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 550, 33))
+        self.menuBar.setGeometry(QRect(0, 0, 720, 33))
         self.menuBar.setStyleSheet(u"QMenu{background-color: rgba(30, 30, 30, 100);border-radius:10px;}")
         self.menuFile = QMenu(self.menuBar)
         self.menuFile.setObjectName(u"menuFile")
@@ -288,17 +302,17 @@ class Ui_MainWindow:
         self.Add.setText(Setting.translateUI('Add'))
         self.Bank.setStatusTip(Setting.translateUI('Vocabulary Bank'))
         self.Translated_text.setStatusTip(Setting.translateUI('Translations'))
-        self.Info.setStatusTip(Setting.translateUI('Infomations'))
+        self.Phonetic.setStatusTip(Setting.translateUI('Phonetic'))
         self.Top.setStatusTip(Setting.translateUI('Top the Words'))
         self.Top.setText(Setting.translateUI('Top'))
         self.Delete.setStatusTip(Setting.translateUI('Delete the Words'))
         self.Delete.setText(Setting.translateUI('Delete'))
-        self.Detail.setStatusTip(Setting.translateUI('Detail'))
+        self.Exchanges.setStatusTip(Setting.translateUI('Exchanges'))
         self.Files.setStatusTip(Setting.translateUI('Files'))
+        self.Expand.setStatusTip(Setting.translateUI('Expand'))
         self.menuFile.setTitle(Setting.translateUI('File'))
         self.menuTools.setTitle(Setting.translateUI('Tools'))
         self.menuSettings.setTitle(Setting.translateUI('Settings'))
         self.menuAbout.setTitle(Setting.translateUI('About'))
         self.menuDicts.setTitle(Setting.translateUI('Dicts'))
-
 
