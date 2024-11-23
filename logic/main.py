@@ -139,9 +139,9 @@ class LMain(Ui_MainWindow):
             return
         if result:
             self.Phonetic.setToolTip(info.match_hint % Setting.getTr('speech_hint'))
+            self.exchanges = result.exchanges
+            self.phrases = result.phrases
         self.result = result
-        self.exchanges = result.exchanges
-        self.phrases = result.phrases
 
     def _handle(self, generator):
         if generator:
@@ -149,9 +149,8 @@ class LMain(Ui_MainWindow):
             for r in generator:
                 results.append(r)
                 if self.text_changed:
-                    break
-            else:
-                return results
+                    return
+            return results
 
     def handle(self):
         while info.prog_running:
@@ -175,6 +174,8 @@ class LMain(Ui_MainWindow):
         self.Translated_text.setToolTip('')
         self.Phonetic.setText('')
         self.Phonetic.setToolTip('')
+        self.Exchanges.clear()
+        self.Expand.clear()
 
     def command_add(self):
         self.append(self.result)
