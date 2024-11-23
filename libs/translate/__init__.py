@@ -47,7 +47,7 @@ class Result:
     @property
     def phrases(self):
         if ' ' in self.word:
-            for wp in self.word.split(' '):
+            for wp in set(self.word.split(' ')):
                 result = translate(wp)
                 if result:
                     yield result
