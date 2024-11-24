@@ -51,12 +51,12 @@ class Result:
                 result = translate(wp)
                 if result:
                     yield result
-        else:
-            for dictionary in dictionaries:
-                if not dictionary.enabled: continue
-                for wp in dictionary:
-                    if ' ' in wp and self.word in wp.split(' '):
-                        yield Result(wp, dictionary[wp])
+        for dictionary in dictionaries:
+            if not dictionary.enabled: continue
+            for wp in dictionary:
+                if (' ' in self.word and self.word != wp and self.word in wp) \
+                    or (' ' in wp and self.word in wp.split(' ')):
+                    yield Result(wp, dictionary[wp])
 
     @property
     def phonetic(self):
