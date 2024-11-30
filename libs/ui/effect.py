@@ -1,6 +1,8 @@
 from pywinstyles import apply_style
-import sys
+import platform
 
 def acrylic(window):
-    if sys.getwindowsversion().major >= 10:
+    try: windows_ver = int(platform.release())
+    except: return
+    if windows_ver > 10:
         apply_style(window, 'acrylic')
