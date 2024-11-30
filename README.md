@@ -1,8 +1,9 @@
-# Translator
+# Plume Lexicon
 **A simple locale translation tool at your service.**
 
 ### Origin
- In my quest of *4000 Essential Words* , I grappled with unfamiliar terms that were hard to comprehend and summarize. Hence, the idea for this app blossomed...
+ - **Former Name: Translator**
+ - In my quest of *4000 Essential Words* , I grappled with unfamiliar terms that were hard to comprehend and summarize. Hence, the idea for this app blossomed...
 
 ### Functions
 

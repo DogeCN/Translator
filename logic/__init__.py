@@ -125,7 +125,7 @@ class LMainWindow(QMainWindow):
         self.ui.Bank.lang = \
         self.ui.Exchanges.lang = \
         self.ui.Expand.lang = Setting.Language
-        title = f'{self.windowTitle()} {info.version}'
+        title = f'{Setting.getTr('title')} {info.version}'
         self.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()

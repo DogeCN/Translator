@@ -279,7 +279,6 @@ class Ui_MainWindow:
 
 
     def retranslateUi(self, MainWindow:QMainWindow):
-        MainWindow.setWindowTitle(Setting.translateUI('Translator'))
         self.actionReload.setText(Setting.translateUI('Reload'))
         self.actionReload.setStatusTip(Setting.translateUI('Reload File'))
         self.actionSave.setText(Setting.translateUI('Save'))

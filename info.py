@@ -1,19 +1,17 @@
 import os
 
-def check(fd):
-    if os.path.isfile(fd) and not os.path.exists(fd):
-        open(fd, 'w').close()
-    elif os.path.isdir(fd) and not os.path.exists(fd):
-        os.mkdir(fd)
-    return fd
+def check_dir(dir):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    return dir
 
-prog_name = 'Translator'
-prog_name_cn = '翻译器'
+prog_name = 'Plume Lexicon'
+prog_name_cn = '羽毛词典'
 prog_running = True
 online = False
 version = 'v1.14.7'
-data_dir = check(os.getenv('AppData') + os.sep + prog_name + os.sep)
-dicts_dir = check(data_dir + 'dictionaries'  + os.sep)
+data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
+dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
@@ -45,6 +43,7 @@ durl = 'https://raw.githubusercontent.com/DogeCN/Translator/refs/heads/main/dict
 durl_cn = 'https://ghproxy.cn/' + durl
 
 Tr = {
+    'title' : (prog_name_cn, prog_name),
     'load' : ('载入单词表', 'Load Vocubulary File'),
     'save_as' : ('保存单词表', 'Save Vocubulary File'),
     'warning' : ('警告', 'Warning'),
@@ -70,7 +69,6 @@ StlSheets = {
 }
 
 UITr = {
-    prog_name : prog_name_cn,
     'Setting' : '设置',
     'Language' : '语言',
     'Auto Save' : '自动保存',
