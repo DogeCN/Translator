@@ -3,7 +3,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 from libs.config import Setting
 from .base import Bank, Files
-from . import _res
+from . import res
 
 class Ui_MainWindow:
     def __init__(self):

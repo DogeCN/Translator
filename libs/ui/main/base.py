@@ -233,7 +233,8 @@ class Files(BaseListWidget):
             return item
 
     def remove(self):
-        self.takeItem(self.row(self.current))
+        for i in self.selectedItems():
+            self.takeItem(self.row(i))
         if not self.current:
             self.bank.clear()
         self.update()

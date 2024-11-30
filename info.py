@@ -6,10 +6,10 @@ def check_dir(dir):
     return dir
 
 prog_name = 'Plume Lexicon'
-prog_name_cn = '羽毛词典'
+prog_name_cn = '羽词'
 prog_running = True
 online = False
-version = 'v1.14.7'
+version = 'v1.14.8'
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
 dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
 ext_dict = '.tdf'
