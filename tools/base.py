@@ -3,7 +3,7 @@ from PySide6.QtGui import QAction, QIcon
 from libs.stdout import print
 from libs.public import Publics
 from libs.io import io, dialog
-from tools._base._logic import LMainWindow
+from ._base._logic import LMainWindow
 from subprocess import Popen
 import info
 

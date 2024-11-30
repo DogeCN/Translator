@@ -96,7 +96,7 @@ def process():
     for result in tool.mw.ui.Bank.results:
         information = result.phonetic
         word = ''.join(['_' if not word_b and c.isalpha() else c for c in result.word])
-        head = word + f' /{information}/' if info_b and information else ''
+        head = word + (f' /{information}/' if info_b and information else '')
         p = document.add_paragraph(head + f'\n{result.get_translation(Setting.Language)}' if trans_b else '')
         p.paragraph_format.line_spacing = Pt(font_size)
         p.paragraph_format.space_after = Pt(5)
