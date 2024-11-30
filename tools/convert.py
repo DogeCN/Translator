@@ -17,9 +17,9 @@ UITr = {
     'Columns' : '列数',
     'Font' : '字体',
     'Pt' : '磅',
-    'Sections' : '段落',
+    'Sections' : '内容',
     'Stamp' : '时间戳',
-    'Word' : '单词',
+    'Words' : '单词',
     'Word Count' : '单词计数'
 }
 

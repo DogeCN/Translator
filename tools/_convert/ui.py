@@ -143,7 +143,7 @@ def setupUi(Dialog:QDialog, Tr):
     label_3.setText(translate('Stamp'))
     label_4.setText(translate('Sections'))
     Word_Count.setText(translate('Word Count'))
-    Word.setText(translate('Word'))
-    Informations.setText(translate('Infomations'))
+    Word.setText(translate('Words'))
+    Informations.setText(translate('Phonetic'))
     Translations.setText(translate('Translations'))
 

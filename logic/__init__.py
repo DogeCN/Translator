@@ -60,9 +60,9 @@ class LMainWindow(QMainWindow):
         return timer
 
     def check_running(self):
-        action = open(info.running).readline().strip()
+        action = open(info.running).readline().strip('\n')
         if action:
-            if action != 'Show' and info.os.path.exists(action):
+            if action != info.running_sign and info.os.path.exists(action):
                 self.ui.load(action)
             self.activateWindow()
             self.showNormal()

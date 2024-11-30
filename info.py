@@ -1,17 +1,19 @@
 import os
 
-def check_dir(dir):
-    if not os.path.exists(dir):
-        os.mkdir(dir)
-    return dir
+def check(fd):
+    if os.path.isfile(fd) and not os.path.exists(fd):
+        open(fd, 'w').close()
+    elif os.path.isdir(fd) and not os.path.exists(fd):
+        os.mkdir(fd)
+    return fd
 
 prog_name = 'Translator'
 prog_name_cn = '翻译器'
 prog_running = True
 online = False
 version = 'v1.14.7'
-data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
-dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
+data_dir = check(os.getenv('AppData') + os.sep + prog_name + os.sep)
+dicts_dir = check(data_dir + 'dictionaries'  + os.sep)
 ext_dict = '.tdf'
 ext_tvf = '.tvf'
 ext_all_tvf = '*' + ext_tvf
@@ -22,6 +24,7 @@ retries = 3
 api_timeout = 3
 max_histories = 100
 running = data_dir + 'running'
+running_sign = ' '
 tools = 'tools'
 default_tvf = data_dir + 'vocabulary' + ext_tvf
 lang_setting = 'res/lang/setting.qm'

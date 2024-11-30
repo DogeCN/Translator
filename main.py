@@ -10,14 +10,17 @@ print('Starting...\n', 'Green', 'Bold')
 def main():
     argv = sys.argv[1] if len(sys.argv) > 1 else None
     fr = info.running
-    difftime = time.time() - info.os.path.getatime(fr)
-    if difftime < 1:
-        if argv:  open(fr, 'a').write(f'{argv}\n')
-        else: open(fr, 'a').write('Show\n')
-        sys.exit()
+    try: difftime = time.time() - info.os.path.getatime(fr)
+    except: open(fr, 'w').close()
+    else:
+        if difftime < 1:
+            if argv:  open(fr, 'a').write(f'{argv}\n')
+            else: open(fr, 'a').write(f'{info.running_sign}\n')
+            return
     app = QApplication()
     LMainWindow(app.exit, argv)
-    sys.exit(app.exec())
+    app.exec()
+    info.os.remove(fr)
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]
