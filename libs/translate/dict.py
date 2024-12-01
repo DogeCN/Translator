@@ -37,7 +37,7 @@ def load_dict(callback):
     _load_dict()
     if not dictionaries:
         pool = ThreadPoolExecutor()
-        for dname in info.dnames:
+        for _, dname in info.dict_names:
             fname = dname + info.ext_dict
             pool.submit(getfile, fname, info.dicts_dir + fname)
         pool.shutdown()

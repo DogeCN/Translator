@@ -7,39 +7,40 @@ def check_dir(dir):
 
 prog_name = 'Plume Lexicon'
 prog_name_cn = '羽词'
+author = 'DogeCN'
+version = 'v1.14.8'
 prog_running = True
 online = False
-version = 'v1.14.8'
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
-dicts_dir = check_dir(data_dir + 'dictionaries'  + os.sep)
-ext_dict = '.tdf'
-ext_tvf = '.tvf'
-ext_all_tvf = '*' + ext_tvf
+dicts_dir_name = 'lexicons'
+dicts_dir = check_dir(data_dir + dicts_dir_name  + os.sep)
+ext_dict = '.plf'
+ext_voca = '.pvf'
+ext_settings = '.psf'
+ext_public = '.ppd'
+ext_all_voca = '*' + ext_voca
 ext_self_exe = '.exe'
 debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
 retries = 3
 api_timeout = 3
-max_histories = 100
 running = data_dir + 'running'
 running_sign = ' '
 tools = 'tools'
-default_tvf = data_dir + 'vocabulary' + ext_tvf
-lang_setting = 'res/lang/setting.qm'
-lang_zh = 'res/lang/zh.qm'
-reg_ext = 'Software\\Classes\\' + ext_tvf
+default_voca = data_dir + 'vocabulary' + ext_voca
+reg_ext = 'Software\\Classes\\' + ext_voca
 reg_cmd = 'shell\\open\\command'
-url_repo = 'github.com/DogeCN/Translator'
+repo_name = 'Plume-Lexicon'
+repo_url = f'github.com/{author}/{repo_name}'
 url_trans = 'https://trans-api.dogecn.workers.dev/translate_a/single?client=gtx&dt=t&sl=auto&tl=%s&q=%s'
 htip_hint = '<html><body><p><span style=" font-size:11pt; font-weight:600;">%s</span style=" font-size:10pt"></p><p>%s</p></body></html>'
 match_hint = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
 log = data_dir + 'latest.log'
-setting = data_dir + 'setting.tsf'
-public = data_dir + 'public.data'
+settings = data_dir + 'settings' + ext_settings
+public = data_dir + 'public' + ext_public
 temp = data_dir + 'temp'
 nontr = ('暂无翻译', 'None Translations')
-dnames = ('Base', 'Long', 'Phrase', 'Term')
-durl = 'https://raw.githubusercontent.com/DogeCN/Translator/refs/heads/main/dictionaries/%s'
+durl = f'https://raw.githubusercontent.com/{author}/{repo_name}/refs/heads/main/{dicts_dir_name}/%s'
 durl_cn = 'https://ghproxy.cn/' + durl
 
 Tr = {

@@ -4,7 +4,7 @@ from logic import LMainWindow
 from libs.stdout import print
 import info
 
-print(f'{info.prog_name} {info.version} By Doge', 'Yellow', 'Bold')
+print(f'{info.prog_name} {info.version} By {info.author}', 'Yellow', 'Bold')
 print('Starting...\n', 'Green', 'Bold')
 
 def main():
@@ -28,7 +28,7 @@ def register(): #For PyInstaller Exe
         sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, info.reg_ext)
         winreg.SetValue(sub_key, info.reg_cmd, winreg.REG_SZ, f'"{file}" "%1"')
         ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
-        print('.TVF Registered')
+        print('Registered')
 
 if info.debug:
     print('Debug Mode ON', 'Red', 'Bold')

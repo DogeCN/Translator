@@ -2,7 +2,7 @@ from .io.base import load, dump
 from libs.stdout import print
 import info
 
-data = info.setting
+data = info.settings
 
 class Settings:
     def __init__(self, file):
@@ -10,7 +10,7 @@ class Settings:
             self.__dict__ = load(file).__dict__
         except:
             self.Language = 0 #0:zh, 1:en
-            self.Vocabulary = info.default_tvf
+            self.Vocabulary = info.default_voca
             self.Auto_save = True
             self.Auto_save_interval = 60
             self.Key_Add = 'Ctrl+E'

@@ -50,7 +50,7 @@ class LMainWindow(QMainWindow):
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_tvf, self.setting_ui.Vocabulary.text())))
+        self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_voca, self.setting_ui.Vocabulary.text())))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
     def ticker(self, func, interval):
