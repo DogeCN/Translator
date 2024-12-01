@@ -6,11 +6,13 @@ from . import res
 
 icon = QIcon()
 
+def icoinit():
+    icon.addFile(u":/icon/x-office-document.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+
 def setupUi(Dialog:QDialog, Tr):
     global Columns, Font, Font_Size, Stamp, Stamp_Format, Word_Count, Word, Informations, Translations
     if not Dialog.objectName():
         Dialog.setObjectName(u"Dialog")
-    icon.addFile(u":/icon/x-office-document.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
     Dialog.setWindowIcon(icon)
     Dialog.resize(373, 155)
     gridLayout = QGridLayout(Dialog)

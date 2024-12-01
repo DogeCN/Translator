@@ -10,7 +10,6 @@ prog_name_cn = '羽词'
 author = 'DogeCN'
 version = 'v1.14.8'
 prog_running = True
-online = False
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
 dicts_dir_name = 'lexicons'
 dicts_dir = check_dir(data_dir + dicts_dir_name  + os.sep)
@@ -24,7 +23,7 @@ debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
 retries = 3
 api_timeout = 3
-running = data_dir + 'running'
+running = data_dir + '.running'
 running_sign = ' '
 tools = 'tools'
 default_voca = data_dir + 'vocabulary' + ext_voca
@@ -80,7 +79,7 @@ UITr = {
     'Secs' : '秒',
     'Add' : '添加',
     'Hotkeys' : '快捷键',
-    'Translate' : '翻译器',
+    'Translate' : '翻译',
     'Word Entry' : '输入框',
     'Enter a word' : '请输入单词',
     'Add into Vocabulary' : '加入单词表',
@@ -95,8 +94,9 @@ UITr = {
     'Tools' : '工具',
     'Settings' : '设置',
     'About' : '关于',
-    'Dicts' : '字典',
+    'Lexicons' : '词典',
     'Reload' : '重载',
+    'Reload Lexicons' : '重载词典',
     'Reload File' : '重载文件',
     'Save' : '保存',
     'Save File' : '保存文件',
@@ -118,8 +118,7 @@ UITr = {
     'Create a New File' : '新建文件',
     'Save All' : '全部保存',
     'Save All Files' : '保存所有文件',
-    'Online' : '在线',
-    'Online Mode' : '在线模式'
+    'Online' : '在线'
 }
 
 dict_names = {

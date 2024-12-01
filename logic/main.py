@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QMessageBox, QMainWindow
 from PySide6.QtCore import Signal, QObject
-from PySide6.QtGui import QAction
-from libs.translate.dict import Dictionary, load_dict
+from libs.translate.dict import load_dict
 from libs.ui.main import Ui_MainWindow
 from libs.ui.main.base import FItem
 from libs.translate import Result
@@ -46,8 +45,9 @@ class LMain(Ui_MainWindow):
     def set_expand(self, results): self.Expand.results = results
     def set_exchanges(self, results): self.Exchanges.results = results
 
-    def setupUi(self, MainWindow):
-        super().setupUi(MainWindow)
+    def __init__(self, MainWindow:QMainWindow):
+        super().__init__()
+        self.setupUi(MainWindow)
         self.parent = MainWindow
         self.raw = QMainWindow(MainWindow)
         self.raw.setStyleSheet(info.StlSheets['raw'])
@@ -83,7 +83,6 @@ class LMain(Ui_MainWindow):
         self.Expand.itemSelectionChanged.connect(self.display_phrases)
         #Signal
         self.signal.set_result_singal.connect(self.set_result)
-        self.signal.show_dicts_singal.connect(self.show_dictionaries)
         self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, Setting.getTr('warning'), Setting.getTr('translate_function_unavailable')))
         self.signal.exchange_singal.connect(self.set_exchanges)
         self.signal.expand_singal.connect(self.set_expand)
@@ -108,17 +107,6 @@ class LMain(Ui_MainWindow):
             self.Add.setEnabled(False)
         else:
             self.Add.setEnabled(True)
-
-    def show_dictionaries(self, dicts:list[Dictionary]):
-        for a in self.menuDicts.actions():
-            if a.isCheckable():
-                self.menuDicts.removeAction(a)
-        for d in dicts:
-            action = QAction(Setting.translateUI(d.name, dict([reversed(dn) for dn in info.dict_names])), self.parent)
-            action.setCheckable(True)
-            action.setChecked(True)
-            action.triggered.connect(lambda *x, _d=d, a=action:_d.setEnabled(a.isChecked()))
-            self.menuDicts.addAction(action)
 
     def correct(self, *evt):
         result = self.result

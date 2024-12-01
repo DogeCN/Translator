@@ -1,6 +1,7 @@
-from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon
+from PySide6.QtWidgets import QDialog, QMenu, QCheckBox, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
 from libs.translate import trans
+from libs.translate.dict import Dictionary
 from libs.config import Setting
 from libs.tool import load
 from libs.io import dialog
@@ -16,8 +17,7 @@ class LMainWindow(QMainWindow):
         super().__init__()
         self.exit = exit
         #Window Build
-        self.ui = LMain()
-        self.ui.setupUi(self)
+        self.ui = LMain(self)
         self.tray = QSystemTrayIcon(self.ui.icon, self)
         self.tmenu = QMenu(self.ui.raw)
         self.tmenu.addAction(self.ui.actionExit)
@@ -30,6 +30,7 @@ class LMainWindow(QMainWindow):
         self.setting_ui = Ui_Settings()
         self.setting_ui.setupUi(self.setting)
         #UI
+        self.lboxs = [] #type: list[QCheckBox]
         self.connect_actions()
         self.retrans()
         self.ui.setShotcuts()
@@ -45,11 +46,13 @@ class LMainWindow(QMainWindow):
     def connect_actions(self):
         self.tray.activated.connect(self.tray_activated)
         self.ui.actionSetting.triggered.connect(self.setting_show)
-        self.ui.actionOnline.triggered.connect(self.command_online)
-        self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
+        self.ui.signal.show_dicts_singal.connect(self.show_lexicons)
+        self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
+        self.setting_ui.Online.toggled.connect(self.command_online)
+        self.setting_ui.LReload.clicked.connect(self.reload_dicts)
         self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_voca, self.setting_ui.Vocabulary.text())))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
@@ -94,6 +97,7 @@ class LMainWindow(QMainWindow):
         self.setting_ui.Key_Add.setKeySequence(Setting.Key_Add)
         self.setting_ui.Key_Delete.setKeySequence(Setting.Key_Del)
         self.setting_ui.Key_Top.setKeySequence(Setting.Key_Top)
+        self.setting_ui.Online.setChecked(Setting.Online)
         self.setting.show()
 
     def show_tools(self):
@@ -107,21 +111,34 @@ class LMainWindow(QMainWindow):
             if tl.type: self.ui.menuTools.addMenu(action)
             else: self.ui.menuTools.addAction(action)
 
-    def command_online(self):
-        self.ui.menuDicts.setEnabled(info.online)
-        info.online = not info.online
+    def reload_dicts(self):
+        for a in self.lboxs:
+            self.setting_ui.verticalLayout.removeWidget(a)
+            a.deleteLater()
+        self.lboxs.clear()
+        self.ui.load_dicts()
+
+    def show_lexicons(self, dicts:list[Dictionary]):
+        for d in dicts:
+            lb = QCheckBox(d.name, self)
+            lb.setChecked(True)
+            lb.toggled.connect(lambda b, d=d: d.setEnabled(b))
+            self.lboxs.append(lb)
+            self.setting_ui.verticalLayout.addWidget(lb)
+        self.retransl()
+
+    def command_online(self, online):
+        self.setting_ui.LexiconBox.setEnabled(not online)
+        self.setting_ui.LReload.setEnabled(not online)
+        Setting.Online = online
+        Setting.dump()
 
     def retrans(self, lang=None):
         if lang is not None:
             Setting.Language = lang
         self.setting_ui.retranslateUi(self.setting)
-        self.ui.retranslateUi(self)
-        for action in self.ui.menuDicts.actions()[2:]:
-            text = action.text()
-            for dn in info.dict_names:
-                if text in dn:
-                    action.setText(dn[Setting.Language])
-                    break
+        self.ui.retranslateUi()
+        self.retransl()
         self.ui.Bank.lang = \
         self.ui.Exchanges.lang = \
         self.ui.Expand.lang = Setting.Language
@@ -129,6 +146,14 @@ class LMainWindow(QMainWindow):
         self.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()
+
+    def retransl(self):
+        for lb in self.lboxs:
+            text = lb.text()
+            for dn in info.dict_names:
+                if text in dn:
+                    lb.setText(dn[Setting.Language])
+                    break
 
     def auto_translate(self):
         tick = 0

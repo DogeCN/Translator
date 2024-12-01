@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import QApplication
 import sys, time, ctypes, winreg, traceback
 from logic import LMainWindow
-from libs.stdout import print
+from libs.stdout import print, log_init
 import info
 
 print(f'{info.prog_name} {info.version} By {info.author}', 'Yellow', 'Bold')
 print('Starting...\n', 'Green', 'Bold')
 
 def main():
+    global app
     argv = sys.argv[1] if len(sys.argv) > 1 else None
     fr = info.running
     try: difftime = time.time() - info.os.path.getatime(fr)
@@ -17,10 +18,10 @@ def main():
             if argv:  open(fr, 'a').write(f'{argv}\n')
             else: open(fr, 'a').write(f'{info.running_sign}\n')
             return
+    log_init()
     app = QApplication()
     LMainWindow(app.exit, argv)
     app.exec()
-    info.os.remove(fr)
 
 def register(): #For PyInstaller Exe
     file = sys.argv[0]

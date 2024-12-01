@@ -1,6 +1,7 @@
 from difflib import SequenceMatcher
 from .api import api_translate
 from .dict import dictionaries
+from ..config import Setting
 import info
 
 class Result:
@@ -117,7 +118,7 @@ def translate(word: str) -> Result:
         return Result(word)
 
 def trans(word: str, *res_lists):
-    if info.online:
+    if Setting.Online:
         return online_translate(word, *res_lists)
     else:
         return translate(word, *res_lists)

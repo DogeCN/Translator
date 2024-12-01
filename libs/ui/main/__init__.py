@@ -76,11 +76,6 @@ class Ui_MainWindow:
         self.actionSave_All.setObjectName(u"actionSave_All")
         self.actionSave_All.setIcon(icon3)
         self.actionSave_All.setShortcut(u"Ctrl+Alt+S")
-        self.actionOnline = QAction(MainWindow)
-        self.actionOnline.setObjectName(u"actionOnline")
-        icon12 = QIcon(QIcon.fromTheme(u"applications-internet"))
-        self.actionOnline.setIcon(icon12)
-        self.actionOnline.setShortcut(u"Ctrl+O")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -135,9 +130,6 @@ class Ui_MainWindow:
         self.Delete.setIcon(icon15)
 
         self.verticalLayout_2.addWidget(self.Delete)
-
-        self.gridLayout.addLayout(self.verticalLayout_2, 0, 1, 2, 1)
-
         self.Bank = Bank(self.centralwidget)
         self.Bank.setObjectName(u"Bank")
         self.Bank.setMinimumSize(QSize(128, 0))
@@ -186,9 +178,12 @@ class Ui_MainWindow:
         self.verticalLayout_2.addWidget(self.splitter)
 
 
+        self.gridLayout.addLayout(self.verticalLayout_2, 0, 1, 2, 1)
+
+
         self.Expand = Bank(self.centralwidget)
         self.Expand.setObjectName(u"Expand")
-        self.Expand.setMinimumSize(QSize(128, 0))
+        self.Expand.setMinimumSize(QSize(150, 0))
         self.Expand.setMaximumSize(QSize(150, 16777215))
         self.Expand.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.Expand.setStyleSheet(u"QToolTip{background-color: rgba(30,30,30,100);color: rgb(200, 200, 25);}QListWidget{font: 10pt;color: rgb(200, 200, 25);}")
@@ -240,10 +235,6 @@ class Ui_MainWindow:
         self.menuTools.setToolTipsVisible(False)
         self.menuSettings = QMenu(self.menuBar)
         self.menuSettings.setObjectName(u"menuSettings")
-        self.menuAbout = QMenu(self.menuBar)
-        self.menuAbout.setObjectName(u"menuAbout")
-        self.menuDicts = QMenu(self.menuBar)
-        self.menuDicts.setObjectName(u"menuDicts")
         MainWindow.setMenuBar(self.menuBar)
         self.statusBar = QStatusBar(MainWindow)
         self.statusBar.setObjectName(u"statusBar")
@@ -251,9 +242,7 @@ class Ui_MainWindow:
 
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
-        self.menuBar.addAction(self.menuDicts.menuAction())
         self.menuBar.addAction(self.menuSettings.menuAction())
-        self.menuBar.addAction(self.menuAbout.menuAction())
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionLoad)
@@ -270,15 +259,12 @@ class Ui_MainWindow:
         self.menuTools.addAction(self.actionTool_Reload)
         self.menuTools.addSeparator()
         self.menuSettings.addAction(self.actionSetting)
-        self.menuSettings.addAction(self.actionOnline)
-        self.menuAbout.addAction(self.actionAbout)
-        self.menuAbout.addAction(self.actionAboutQt)
-        self.menuDicts.addAction(self.actionDict_Reload)
-        self.menuDicts.addSeparator()
+        self.menuSettings.addSeparator()
+        self.menuSettings.addAction(self.actionAbout)
+        self.menuSettings.addAction(self.actionAboutQt)
 
 
-
-    def retranslateUi(self, MainWindow:QMainWindow):
+    def retranslateUi(self):
         self.actionReload.setText(Setting.translateUI('Reload'))
         self.actionReload.setStatusTip(Setting.translateUI('Reload File'))
         self.actionSave.setText(Setting.translateUI('Save'))
@@ -308,8 +294,6 @@ class Ui_MainWindow:
         self.actionNew.setStatusTip(Setting.translateUI('Create a New File'))
         self.actionSave_All.setText(Setting.translateUI('Save All'))
         self.actionSave_All.setStatusTip(Setting.translateUI('Save All Files'))
-        self.actionOnline.setText(Setting.translateUI('Online'))
-        self.actionOnline.setStatusTip(Setting.translateUI('Online Mode'))
         self.Word_Entry.setStatusTip(Setting.translateUI('Word Entry'))
         self.Word_Entry.setPlaceholderText(Setting.translateUI('Enter a word'))
         self.Add.setStatusTip(Setting.translateUI('Add into Vocabulary'))
@@ -327,6 +311,4 @@ class Ui_MainWindow:
         self.menuFile.setTitle(Setting.translateUI('File'))
         self.menuTools.setTitle(Setting.translateUI('Tools'))
         self.menuSettings.setTitle(Setting.translateUI('Settings'))
-        self.menuAbout.setTitle(Setting.translateUI('About'))
-        self.menuDicts.setTitle(Setting.translateUI('Dicts'))
 

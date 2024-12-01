@@ -11,6 +11,7 @@ class Settings:
         except:
             self.Language = 0 #0:zh, 1:en
             self.Vocabulary = info.default_voca
+            self.Online = False
             self.Auto_save = True
             self.Auto_save_interval = 60
             self.Key_Add = 'Ctrl+E'
@@ -25,9 +26,12 @@ class Settings:
         if key in Tr:
             return Tr[key]
         else:
+            sk = key
             for k in Tr:
                 if k in key:
-                    return key.replace(k, Tr[k])
+                    key = key.replace(k, Tr[k])
+            if key != sk:
+                return key
     
     def translateUI(self, key:str, ExTr=None) -> str:
         if self.Language:

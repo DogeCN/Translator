@@ -4,7 +4,8 @@ import info
 stdout = sys.stdout
 log = info.log
 
-if not stdout: open(log, 'w').close()
+def log_init():
+    if not stdout: open(log, 'w').close()
 
 Attr = {
     'Reset': 0,
@@ -26,7 +27,8 @@ Attr = {
 _getstamp = lambda f:time.strftime(f, time.localtime())
 
 #Redefine the print function
-def print(rstr:str, *attr):
+def print(rstr, *attr):
+    rstr = str(rstr)
     if '\n' in rstr:
         for r in rstr.split('\n'):
             print(r, *attr)

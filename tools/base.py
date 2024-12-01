@@ -13,16 +13,19 @@ class Action:
     visible = True
     enabled = True
     shortcut = ''
+    _action = None
     def __call__(self):
-        action = QAction(self.tool.get_name(), self.tool.mw)
-        action.setStatusTip(self.tool.get_doc())
-        action.setVisible(self.visible)
-        action.setEnabled(self.enabled)
-        action.setShortcut(self.shortcut)
-        if self.icon:
-            action.setIcon(self.icon)
-        action.triggered.connect(lambda *x,_t=self.tool:_t())
-        return action
+        if not self._action:
+            self._action = QAction(self.tool.get_name(), self.tool.mw)
+            self._action.setStatusTip(self.tool.get_doc())
+            self._action.setVisible(self.visible)
+            self._action.setEnabled(self.enabled)
+            self._action.setShortcut(self.shortcut)
+            if self.icon:
+                self._action.setIcon(self.icon)
+            self._action.triggered.connect(lambda *x,_t=self.tool:_t())
+            self.tool.init()
+        return self._action
 
 class Menu:
     tool = ... #type: Tool
@@ -30,22 +33,24 @@ class Menu:
     icon = None #type: QIcon
     visible = True
     enabled = True
+    _menu = None
     def __call__(self):
-        for tool in self.tools:
-            tool.mw = self.tool.mw
-            tool.lang = self.tool.lang
-        menu = QMenu(self.tool.get_name(), self.tool.mw.ui.menuBar)
-        menu.setVisible(self.visible)
-        menu.setEnabled(self.enabled)
-        for tool in self.tools:
-            action = tool.action()
-            action.setParent(menu)
-            if tool.type: action.setMenu(action)
-            else: menu.addAction(action)
-        if self.icon:
-            menu.setIcon(self.icon)
-        menu.hide()
-        return menu
+        if not self._menu:
+            for tool in self.tools:
+                tool.mw = self.tool.mw
+                tool.lang = self.tool.lang
+            self._menu = QMenu(self.tool.get_name(), self.tool.mw.ui.menuBar)
+            self._menu.setVisible(self.visible)
+            self._menu.setEnabled(self.enabled)
+            for tool in self.tools:
+                action = tool.action()
+                action.setParent(self._menu)
+                if tool.type: action.setMenu(action)
+                else: self._menu.addAction(action)
+            if self.icon:
+                self._menu.setIcon(self.icon)
+            self._menu.hide()
+        return self._menu
 
 class Message:
     tool = ... #type: Tool
@@ -133,6 +138,8 @@ class Tool:
         self.data.tool = self
         self.tr = Tr()
         self.tr.tool = self
+    def init(self):
+        pass
     def __call__(self, *args):
         if self.entrance: self.entrance(*args)
         else: print(f"Can't find an entrance of the tool {self.name}", 'Red')
