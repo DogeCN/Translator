@@ -28,5 +28,5 @@
   ![File Operation](https://github.com/user-attachments/assets/e6b2e23a-de22-43b6-a365-5f1cb9c93a01)
 
 ### Platform
- - Windown 10
+ - Windows 10
  - **Windows 11 (Better)**
