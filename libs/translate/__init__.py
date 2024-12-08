@@ -1,6 +1,6 @@
 from difflib import SequenceMatcher
 from .api import api_translate
-from .dict import dictionaries
+from .dict import lexicons
 from ..config import Setting
 import info
 
@@ -23,8 +23,8 @@ class Result:
     def translation(self, translation):
         self.value[2] = translation
 
-    def get_translation(self, lang):
-        return self.definition if lang else self.translation
+    def get_translation(self):
+        return self.definition if Setting.Language else self.translation
 
     @property
     def definition(self):
@@ -35,8 +35,8 @@ class Result:
     def definition(self, definition):
         self.value[1] = definition
 
-    def get_definition(self, lang):
-        return self.translation if lang else self.definition
+    def get_definition(self):
+        return self.translation if Setting.Language else self.definition
 
     @property
     def exchanges(self):
@@ -52,7 +52,7 @@ class Result:
                 result = translate(wp)
                 if result:
                     yield result
-        for dictionary in dictionaries:
+        for dictionary in lexicons:
             if not dictionary.enabled: continue
             for wp in dictionary:
                 if (' ' in self.word and self.word != wp and self.word in wp) \
@@ -64,14 +64,14 @@ class Result:
         return self.value[0]
     
     def __bool__(self):
-        return bool(self.value[2]) and not self.match
+        return bool(self.value[1 if Setting.Language else 2]) and not self.match
     
     def __eq__(self, value):
         return self.word == value
     
-    def get_tip(self, lang):
-        trans_html = self.get_translation(lang).replace('\n', '<br>')
-        return info.htip_hint % (info.Tr['htip'][lang] % self.word, trans_html)
+    def get_tip(self):
+        trans_html = self.get_translation().replace('\n', '<br>')
+        return info.htip_hint % (Setting.getTr('htip') % self.word, trans_html)
 
 def fast(func):
     def wrapper(word: str, *res_lists: list[Result]) -> Result:
@@ -96,7 +96,7 @@ def translate(word: str) -> Result:
     s = SequenceMatcher()
     s.set_seq2(word)
     result = None
-    for dictionary in dictionaries:
+    for dictionary in lexicons:
         if not dictionary.enabled: continue
         for wp in [word, word.lower(), word.capitalize()]:
             if wp in dictionary:

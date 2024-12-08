@@ -1,21 +1,20 @@
-from PySide6.QtWidgets import QDialog, QMenu, QCheckBox, QMainWindow, QSystemTrayIcon
+from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
 from libs.translate import trans
-from libs.translate.dict import Dictionary
+from libs.translate.dict import Lexicon, LexiBox
 from libs.config import Setting
 from libs.tool import load
 from libs.io import dialog
-from libs.ui.effect import acrylic
 from libs.ui.setting import Ui_Settings
+from libs.debris import Set_Acrylic
 from .main import LMain
 from threading import Thread
 from time import sleep
 import info
 
 class LMainWindow(QMainWindow):
-    def __init__(self, exit, file=None):
+    def __init__(self, file=None):
         super().__init__()
-        self.exit = exit
         #Window Build
         self.ui = LMain(self)
         self.tray = QSystemTrayIcon(self.ui.icon, self)
@@ -30,12 +29,12 @@ class LMainWindow(QMainWindow):
         self.setting_ui = Ui_Settings()
         self.setting_ui.setupUi(self.setting)
         #UI
-        self.lboxs = [] #type: list[QCheckBox]
+        self.lboxes = [] #type: list[LexiBox]
         self.connect_actions()
         self.retrans()
         self.ui.setShotcuts()
-        self.ui.load_dicts()
-        acrylic(self)
+        self.ui.load_lexis()
+        Set_Acrylic(self)
         #Threading
         self.argv = file
         Thread(target=lambda:self.ui.load(file)).start()
@@ -47,12 +46,13 @@ class LMainWindow(QMainWindow):
         self.tray.activated.connect(self.tray_activated)
         self.ui.actionSetting.triggered.connect(self.setting_show)
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
-        self.ui.signal.show_dicts_singal.connect(self.show_lexicons)
+        self.ui.signal.show_lexis_singal.connect(self.show_lexicons)
+        self.ui.signal.set_rbenabled_signal.connect(self.setting_ui.LReload.setEnabled)
         self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.Online.toggled.connect(self.command_online)
-        self.setting_ui.LReload.clicked.connect(self.reload_dicts)
+        self.setting_ui.Online.toggled.connect(lambda o: self.setting_ui.LexiconBox.setEnabled(not o) and setattr(Setting, 'Online', o) and Setting.dump())
+        self.setting_ui.LReload.clicked.connect(self.reload_lexis)
         self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_voca, self.setting_ui.Vocabulary.text())))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
 
@@ -73,8 +73,8 @@ class LMainWindow(QMainWindow):
 
     def tray_activated(self, reason):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-                self.activateWindow()
-                self.showNormal()
+            self.activateWindow()
+            self.showNormal()
 
     def accept(self):
         Setting.Auto_save = self.setting_ui.Auto_Save.isChecked()
@@ -88,7 +88,7 @@ class LMainWindow(QMainWindow):
         Setting.dump()
 
     def setting_show(self):
-        acrylic(self.setting)
+        Set_Acrylic(self.setting)
         self.setting_ui.Lang.setCurrentIndex(Setting.Language)
         self.setting_ui.Auto_Save.setChecked(Setting.Auto_save)
         self.setting_ui.Interval.setEnabled(Setting.Auto_save)
@@ -104,56 +104,38 @@ class LMainWindow(QMainWindow):
         for action in self.ui.menuTools.actions()[2:]:
             self.ui.menuTools.removeAction(action)
         from libs.tool import Tools
-        for tl in Tools.values():
+        for tl in Tools:
             tl.mw = self
             tl.lang = Setting.Language
             action = tl.action()
             if tl.type: self.ui.menuTools.addMenu(action)
             else: self.ui.menuTools.addAction(action)
 
-    def reload_dicts(self):
-        for a in self.lboxs:
+    def reload_lexis(self):
+        for a in self.lboxes:
             self.setting_ui.verticalLayout.removeWidget(a)
             a.deleteLater()
-        self.lboxs.clear()
-        self.ui.load_dicts()
+        self.lboxes.clear()
+        self.ui.load_lexis()
 
-    def show_lexicons(self, dicts:list[Dictionary]):
-        for d in dicts:
-            lb = QCheckBox(d.name, self)
-            lb.setChecked(True)
-            lb.toggled.connect(lambda b, d=d: d.setEnabled(b))
-            self.lboxs.append(lb)
+    def show_lexicons(self):
+        from libs.translate.dict import lexicons
+        for l in lexicons:
+            lb = LexiBox(l, self)
+            self.lboxes.append(lb)
             self.setting_ui.verticalLayout.addWidget(lb)
-        self.retransl()
-
-    def command_online(self, online):
-        self.setting_ui.LexiconBox.setEnabled(not online)
-        self.setting_ui.LReload.setEnabled(not online)
-        Setting.Online = online
-        Setting.dump()
 
     def retrans(self, lang=None):
         if lang is not None:
             Setting.Language = lang
         self.setting_ui.retranslateUi(self.setting)
         self.ui.retranslateUi()
-        self.retransl()
-        self.ui.Bank.lang = \
-        self.ui.Exchanges.lang = \
-        self.ui.Expand.lang = Setting.Language
+        for lb in self.lboxes:
+            lb.retrans()
         title = f'{Setting.getTr('title')} {info.version}'
         self.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()
-
-    def retransl(self):
-        for lb in self.lboxs:
-            text = lb.text()
-            for dn in info.dict_names:
-                if text in dn:
-                    lb.setText(dn[Setting.Language])
-                    break
 
     def auto_translate(self):
         tick = 0
@@ -178,12 +160,10 @@ class LMainWindow(QMainWindow):
                 sleep(0.5)
 
     def closeEvent(self, evt:QEvent):
-        if self.ui.closing:
-            info.prog_running = False
-            if Setting.Auto_save:
-                self.ui.save_all(False)
-            self.exit()
-        else:
+        if info.prog_running:
             self.hide()
             evt.ignore()
-
+        else:
+            if Setting.Auto_save:
+                self.ui.save_all(False)
+            exit()

@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import QApplication
-import sys, time, ctypes, winreg, traceback
+import sys, time, winreg, traceback
 from logic import LMainWindow
 from libs.stdout import print, log_init
+from libs.debris import Refresh_Explorer
 import info
 
 print(f'{info.prog_name} {info.version} By {info.author}', 'Yellow', 'Bold')
@@ -20,7 +21,7 @@ def main():
             return
     log_init()
     app = QApplication()
-    LMainWindow(app.exit, argv)
+    LMainWindow(argv)
     app.exec()
 
 def register(): #For PyInstaller Exe
@@ -28,7 +29,7 @@ def register(): #For PyInstaller Exe
     if file.endswith(info.ext_self_exe):
         sub_key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, info.reg_ext)
         winreg.SetValue(sub_key, info.reg_cmd, winreg.REG_SZ, f'"{file}" "%1"')
-        ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
+        Refresh_Explorer()
         print('Registered')
 
 if info.debug:

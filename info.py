@@ -11,9 +11,9 @@ author = 'DogeCN'
 version = 'v1.14.8'
 prog_running = True
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
-dicts_dir_name = 'lexicons'
-dicts_dir = check_dir(data_dir + dicts_dir_name  + os.sep)
-ext_dict = '.plf'
+lexis_dir_name = 'lexicons'
+lexis_dir = check_dir(data_dir + lexis_dir_name  + os.sep)
+ext_lexi = '.plf'
 ext_voca = '.pvf'
 ext_settings = '.psf'
 ext_public = '.ppd'
@@ -22,7 +22,7 @@ ext_self_exe = '.exe'
 debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
 retries = 3
-api_timeout = 3
+timeout = 3
 running = data_dir + '.running'
 running_sign = ' '
 tools = 'tools'
@@ -33,14 +33,16 @@ repo_name = 'Plume-Lexicon'
 repo_url = f'github.com/{author}/{repo_name}'
 url_trans = 'https://trans-api.dogecn.workers.dev/translate_a/single?client=gtx&dt=t&sl=auto&tl=%s&q=%s'
 htip_hint = '<html><body><p><span style=" font-size:11pt; font-weight:600;">%s</span style=" font-size:10pt"></p><p>%s</p></body></html>'
-match_hint = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
+speech_hint = '<html><body style=" font-family:\'Microsoft YaHei UI\'; font-size:9pt; font-weight:400; "><p>%s</p></body></html>'
 log = data_dir + 'latest.log'
 settings = data_dir + 'settings' + ext_settings
 public = data_dir + 'public' + ext_public
 temp = data_dir + 'temp'
 nontr = ('暂无翻译', 'None Translations')
-durl = f'https://raw.githubusercontent.com/{author}/{repo_name}/refs/heads/main/{dicts_dir_name}/%s'
-durl_cn = 'https://ghproxy.cn/' + durl
+lurl = f'https://raw.githubusercontent.com/{author}/{repo_name}/refs/heads/main/{lexis_dir_name}/%s'
+lurl_cn = 'https://ghproxy.cn/' + lurl
+
+default_lexis = ['Base', 'Long', 'Phrase', 'Term']
 
 Tr = {
     'title' : (prog_name_cn, prog_name),
@@ -48,11 +50,11 @@ Tr = {
     'save_as' : ('保存单词表', 'Save Vocubulary File'),
     'warning' : ('警告', 'Warning'),
     'translate_function_unavailable' : (
-        '''无法加载字典
+        '''无法加载词典
 翻译功能不可用
 但你可以浏览已有词汇
 (首次使用需连接互联网)''',
-        '''Can't load dictionaries.
+        '''Can't load lexicons.
 Although the translate function is unavailable,
 you can read existed vocabularies.
 (Internet connection required for the first use)'''
@@ -111,7 +113,6 @@ UITr = {
     'About Qt' : '关于Qt',
     'About Qt Engine' : '关于Qt引擎',
     'Relaod Tools' : '重载工具',
-    'Reload Dictionaries' : '重载字典',
     'Remove' : '移除',
     'Remove Current File' : '移除当前文件',
     'New' : '新建',
@@ -119,11 +120,4 @@ UITr = {
     'Save All' : '全部保存',
     'Save All Files' : '保存所有文件',
     'Online' : '在线'
-}
-
-dict_names = {
-    ('基本词汇' , 'Base'),
-    ('长词汇', 'Long'),
-    ('短语', 'Phrase'),
-    ('术语', 'Term')
 }

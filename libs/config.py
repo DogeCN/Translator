@@ -1,4 +1,5 @@
 from .io.base import load, dump
+from .debris import Get_Language
 from libs.stdout import print
 import info
 
@@ -9,7 +10,7 @@ class Settings:
         try:
             self.__dict__ = load(file).__dict__
         except:
-            self.Language = 0 #0:zh, 1:en
+            self.Language = Get_Language() #0:zh, 1:en
             self.Vocabulary = info.default_voca
             self.Online = False
             self.Auto_save = True

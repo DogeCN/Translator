@@ -2,8 +2,8 @@ from .base import *
 from random import choice, randint
 
 def all():
-    global dictionaries
-    from libs.translate.dict import dictionaries
+    global lexicons
+    from libs.translate.dict import lexicons
     while True:
         try: retry()
         except: continue
@@ -14,7 +14,7 @@ def inbank():
     Bank.current = choice(Bank.items)
 
 def retry():
-    dicts = [d for d in dictionaries if d.enabled]
+    dicts = [d for d in lexicons if d.enabled]
     dict = choice(dicts)
     word = choose(dict)
     tool.mw.ui.Word_Entry.setText(word)

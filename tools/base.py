@@ -121,9 +121,9 @@ class Tool:
     mw = ... #type: LMainWindow
     #Basic Infos
     name = 'New Tool'
-    name_zh = ''
+    name_zh = '新工具'
     doc = 'This is a new tool'
-    doc_zh = ''
+    doc_zh = '这是一个新的工具'
     lang = 1
     entrance = None
     def __init__(self, type=0):

@@ -2,7 +2,7 @@ from .base import *
 from PySide6.QtWidgets import QDialog
 from ._convert import ui
 from libs.stdout import _getstamp
-from libs.ui.effect import acrylic
+from libs.debris import Set_Acrylic
 from docx import Document
 from docx.oxml.ns import qn
 from docx.shared import Pt
@@ -55,7 +55,7 @@ def uimain():
     dialog.setWindowIcon(ui.icon)
     dialog.accepted.connect(main)
     dialog.setWindowTitle(tool.get_name())
-    acrylic(dialog)
+    Set_Acrylic(dialog)
     ui.setupUi(dialog, UITr)
     ui.Stamp.toggled.connect(lambda b: ui.Stamp_Format.setEnabled(b) or ui.Word_Count.setEnabled(b))
     load_settings()
@@ -101,7 +101,7 @@ def process():
         information = result.phonetic
         word = ''.join(['_' if not word_b and c.isalpha() else c for c in result.word])
         head = word + (f' /{information}/' if info_b and information else '')
-        p = document.add_paragraph(head + f'\n{result.get_translation(Setting.Language)}' if trans_b else '')
+        p = document.add_paragraph(head + f'\n{result.get_translation()}' if trans_b else '')
         p.paragraph_format.line_spacing = Pt(font_size)
         p.paragraph_format.space_after = Pt(5)
     return document

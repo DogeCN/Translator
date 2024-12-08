@@ -8,8 +8,8 @@ def load():
     try: Tools = dynamic_get()
     except: Tools = static_get()
 
-def dynamic_get() -> dict[str, Tool]:
-    Tools = {}
+def dynamic_get() -> list[Tool]:
+    Tools = []
     dpath = os.path.join(os.getcwd(), info.tools)
     for f in os.listdir(dpath):
         mname = os.path.splitext(f)[0]
@@ -17,17 +17,12 @@ def dynamic_get() -> dict[str, Tool]:
         module = importlib.import_module(mpath)
         try: tool = getattr(module, 'tool')
         except AttributeError: continue
-        Tools[mname] = tool
-    print(f"Loaded tools: {', '.join(Tools.keys())}", 'Bold')
+        Tools.append(tool)
+    print(f"Loaded tools: {', '.join(Tools)}", 'Bold')
     return Tools
 
 def static_get():
     from tools import batch, convert, random, mix
-    return {
-        'batch': batch.tool,
-        'random': random.tool,
-        'convert': convert.tool,
-        'mix': mix.tool,
-    }
+    return {batch.tool, random.tool, convert.tool, mix.tool}
 
 load()
