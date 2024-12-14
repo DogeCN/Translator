@@ -14,6 +14,7 @@ data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
 lexis_dir_name = 'lexicons'
 lexis_dir = check_dir(data_dir + lexis_dir_name  + os.sep)
 ext_lexi = '.plf'
+ext_disabled = '.disabled'
 ext_voca = '.pvf'
 ext_settings = '.psf'
 ext_public = '.ppd'
@@ -49,6 +50,8 @@ Tr = {
     'load' : ('载入单词表', 'Load Vocubulary File'),
     'save_as' : ('保存单词表', 'Save Vocubulary File'),
     'warning' : ('警告', 'Warning'),
+    'unload' : ('未加载', 'Unload'),
+    'loadfailed' : ('加载失败', 'Failed to Load'),
     'translate_function_unavailable' : (
         '''无法加载词典
 翻译功能不可用
@@ -67,7 +70,9 @@ you can read existed vocabularies.
 
 StlSheets = {
     'tmenu' : 'border-radius:5px;',
-    'raw' : 'background-color: rgb(30, 30, 30);'
+    'raw' : 'background-color: rgb(30, 30, 30);',
+    'green' : 'color: rgb(30,200,30);',
+    'red' : 'color: rgb(200,30,30);'
 }
 
 UITr = {

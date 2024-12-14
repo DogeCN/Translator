@@ -1,14 +1,15 @@
 from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
 from libs.translate import trans
-from libs.translate.dict import Lexicon, LexiBox
+from libs.translate.dict import LexiBox, csignal
 from libs.config import Setting
 from libs.tool import load
 from libs.io import dialog
 from libs.ui.setting import Ui_Settings
-from libs.debris import Set_Acrylic
+from libs.debris import Ticker, Set_Acrylic
 from .main import LMain
 from threading import Thread
+from subprocess import Popen
 from time import sleep
 import info
 
@@ -47,14 +48,15 @@ class LMainWindow(QMainWindow):
         self.ui.actionSetting.triggered.connect(self.setting_show)
         self.ui.actionTool_Reload.triggered.connect(lambda:load() or self.show_tools())
         self.ui.signal.show_lexis_singal.connect(self.show_lexicons)
-        self.ui.signal.set_rbenabled_signal.connect(self.setting_ui.LReload.setEnabled)
         self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
         self.setting_ui.Online.toggled.connect(lambda o: self.setting_ui.LexiconBox.setEnabled(not o) and setattr(Setting, 'Online', o) and Setting.dump())
         self.setting_ui.LReload.clicked.connect(self.reload_lexis)
+        self.setting_ui.viewLexicons.clicked.connect(lambda:Popen(f'explorer "{info.lexis_dir}"'))
         self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_voca, self.setting_ui.Vocabulary.text())))
         self.setting_ui.Auto_Save.stateChanged.connect(lambda:self.setting_ui.Interval.setEnabled(self.setting_ui.Auto_Save.isChecked()))
+        csignal.sre.connect(self.setting_ui.LReload.setEnabled)
 
     def ticker(self, func, interval):
         timer = QTimer(self)
@@ -131,30 +133,28 @@ class LMainWindow(QMainWindow):
         self.setting_ui.retranslateUi(self.setting)
         self.ui.retranslateUi()
         for lb in self.lboxes:
-            lb.retrans()
+            lb.update()
         title = f'{Setting.getTr('title')} {info.version}'
         self.setWindowTitle(title)
         self.tray.setToolTip(title)
         self.show_tools()
 
     def auto_translate(self):
-        tick = 0
+        ticker = Ticker()
         while info.prog_running:
             #Auto Translate
             if self.isActiveWindow() or self.setting.isActiveWindow():
-                ticking = tick > 20
-                if self.ui.text_changed or ticking:
-                    tick = 0
-                    self.ui.text_changed = False
+                ticking = bool(ticker)
+                if self.ui.tc or ticking:
+                    self.ui.tc = False
                     word = self.ui.Word_Entry.text().strip()
                     if word != '':
                         if (not ticking) and (word not in self.ui.Bank.words):
                             self.ui.Bank.roll(word)
-                        self.ui._result = trans(word, self.ui.Bank.results, self.ui.Exchanges.results, self.ui.Expand.results)
-                        if self.ui.text_changed:
+                        self.ui._result = trans(word, self.ui.Bank.results)
+                        if self.ui.tc:
                             continue
                         self.ui.signal.set_result_singal.emit()
-                tick += 1
                 sleep(0.05)
             else:
                 sleep(0.5)

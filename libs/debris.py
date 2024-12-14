@@ -1,7 +1,5 @@
 from pywinstyles import apply_style
-import win32clipboard
-import platform
-import ctypes
+import win32clipboard, platform, ctypes, os
 
 def Set_Acrylic(window):
     try: windows_ver = int(platform.release())
@@ -16,8 +14,20 @@ def Get_Language():
     else:
         return 1
 
-def Refresh_Explorer():
+def Refresh_Icons():
     ctypes.windll.Shell32.SHChangeNotify(0x8000000, 0, 0, 0)
+
+def Get_New_File_Name(fn:str, ext:str='', exclusions:list[str]=[]):
+    fn = fn + '%s' + ext
+    efn = lambda fn:fn in exclusions or os.path.exists(fn)
+    if efn(fn%''):
+        i = 2
+        while efn(fn%f'({i})'):
+            i += 1
+        fn = fn%f'({i})'
+    else: fn = fn%''
+    print('File Name: ' + fn)
+    return fn
 
 class Clipboard:
     
@@ -32,3 +42,17 @@ class Clipboard:
         text = win32clipboard.GetClipboardData()
         win32clipboard.CloseClipboard()
         return text
+
+class Ticker:
+    tick = 0
+
+    def __init__(self, interval=20):
+        self.interval = interval
+
+    def __bool__(self):
+        if self.tick >= self.interval:
+            self.tick = 0
+            return True
+        else:
+            self.tick += 1
+            return False

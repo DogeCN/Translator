@@ -52,12 +52,12 @@ class Result:
                 result = translate(wp)
                 if result:
                     yield result
-        for dictionary in lexicons:
-            if not dictionary.enabled: continue
-            for wp in dictionary:
+        for lexicon in lexicons:
+            if not lexicon.enabled: continue
+            for wp in lexicon:
                 if (' ' in self.word and self.word != wp and self.word in wp) \
                     or (' ' in wp and self.word in wp.split(' ')):
-                    yield Result(wp, dictionary[wp])
+                    yield Result(wp, lexicon[wp])
 
     @property
     def phonetic(self):
@@ -96,19 +96,19 @@ def translate(word: str) -> Result:
     s = SequenceMatcher()
     s.set_seq2(word)
     result = None
-    for dictionary in lexicons:
-        if not dictionary.enabled: continue
+    for lexicon in lexicons:
+        if not lexicon.enabled: continue
         for wp in [word, word.lower(), word.capitalize()]:
-            if wp in dictionary:
-                return Result(word, dictionary[wp])
+            if wp in lexicon:
+                return Result(word, lexicon[wp])
 
-        for wm in dictionary:
+        for wm in lexicon:
             if wm[0] == word[0]:
                 s.set_seq1(wm)
                 if s.real_quick_ratio() > max and s.quick_ratio() > max:
                     ratio = s.ratio()
                     if ratio > max:
-                        result = Result(wm, dictionary[wm])
+                        result = Result(wm, lexicon[wm])
                         max = ratio
 
     if result is not None:

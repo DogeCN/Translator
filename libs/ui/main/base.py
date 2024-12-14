@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
+from libs.debris import Get_New_File_Name
 from libs.translate import Result
 from libs.config import Setting
 from libs.io import io, dialog
@@ -23,9 +24,10 @@ class BaseListWidgetItem(QtWidgets.QListWidgetItem): ...
 class LItem(BaseListWidgetItem):
     def __init__(self, result:Result):
         super().__init__(result.word)
-        self.word = result.word
-        self.setBackground(QtGui.QColor(255, 100, 100, 30) if result.online else QtGui.QColor(100, 255, 255, 30))
         self.result = result
+        self.word = result.word
+        self.setToolTip(self.result.get_translation())
+        self.setBackground(QtGui.QColor(255, 100, 100, 30) if result.online else QtGui.QColor(100, 255, 255, 30))
         self.update()
 
     @property
@@ -225,14 +227,7 @@ class Files(BaseListWidget):
 
     def new(self, fn=None):
         if not fn:
-            fn = 'untitled%s' + info.ext_voca
-            lfn = lambda fn:fn in self.names or info.os.path.exists(fn)
-            if lfn(fn%''):
-                i = 2
-                while lfn(fn%f'({i})'):
-                    i += 1
-                fn = fn%f'({i})'
-            else: fn = fn%''
+            fn = Get_New_File_Name('untitled', info.ext_voca, self.names)
         self.addItem(FItem(fn))
 
     def dragEnterEvent(self, event):

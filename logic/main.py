@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QMessageBox, QMainWindow
 from PySide6.QtCore import Signal, QObject
-from libs.translate.dict import load_lexi
+from libs.translate.dict import load_lexis
 from libs.ui.main import Ui_MainWindow
 from libs.ui.main.base import FItem
-from libs.debris import Clipboard
+from libs.debris import Clipboard, Ticker
 from libs.translate import Result
 from libs.config import Setting
 from libs.io import dialog
@@ -15,7 +15,6 @@ import webbrowser, info
 class LSignal(QObject):
     set_result_singal = Signal()
     callback_singal = Signal()
-    set_rbenabled_signal = Signal(bool)
     show_lexis_singal = Signal()
     exchange_singal = Signal(Result)
     expand_singal = Signal(Result)
@@ -23,7 +22,6 @@ class LSignal(QObject):
         super().__init__()
 
 class LMain(Ui_MainWindow):
-    text_changed = False
     _voice = Dispatch('SAPI.SpVoice')
     _result = Result()
     signal = LSignal()
@@ -32,15 +30,15 @@ class LMain(Ui_MainWindow):
     phrases = None
     parent = None
     raw = None
+    tc = False
+    hc = False
 
     def load_lexis(self):
         self.lexi_thread = Thread(target=self._load_lexis)
         self.lexi_thread.start()
     def _load_lexis(self):
-        self.signal.set_rbenabled_signal.emit(False)
-        load_lexi(self.signal.callback_singal.emit)
+        load_lexis(self.signal.callback_singal.emit)
         self.signal.show_lexis_singal.emit()
-        self.signal.set_rbenabled_signal.emit(True)
     def save_all(self, silent=True):
         for item in self.Files.items: item.save(silent)
     def append(self, result): self.Bank.append(result); self.Files.keep()
@@ -128,6 +126,7 @@ class LMain(Ui_MainWindow):
             self.Translated_text.setToolTip(Setting.getTr('correct_hint'))
         elif result:
             self.Phonetic.setToolTip(info.speech_hint % Setting.getTr('speech_hint'))
+            self.hc = True
             self.exchanges = result.exchanges
             self.phrases = result.phrases
             self.result = result
@@ -137,29 +136,32 @@ class LMain(Ui_MainWindow):
             results = []
             for r in generator:
                 results.append(r)
-                if self.text_changed:
+                if self.hc:
+                    self.hc = False
                     return
             return results
 
     def handle(self):
+        ticker = Ticker()
         while info.prog_running:
-            print()
             if self.parent.isActiveWindow():
-                if self.Exchanges.height():
-                    exchanges = self._handle(self.exchanges)
-                    if exchanges is not None:
-                        self.signal.exchange_singal.emit(exchanges)
-                    self.exchanges = None
-                phrases = self._handle(self.phrases)
-                if phrases is not None:
-                    self.signal.expand_singal.emit(phrases)
-                self.phrases = None
+                if self.hc or ticker:
+                    self.hc = False
+                    if self.Exchanges.height():
+                        exchanges = self._handle(self.exchanges)
+                        if exchanges is not None:
+                            self.signal.exchange_singal.emit(exchanges)
+                            self.exchanges = None
+                    phrases = self._handle(self.phrases)
+                    if phrases is not None:
+                        self.signal.expand_singal.emit(phrases)
+                        self.phrases = None
                 sleep(0.05)
             else:
                 sleep(0.5)
 
     def text_change(self):
-        self.text_changed = True
+        self.tc = True
         self.Add.setEnabled(False)
         self.Translated_text.setText('')
         self.Translated_text.setToolTip('')
@@ -167,6 +169,7 @@ class LMain(Ui_MainWindow):
         self.Phonetic.setToolTip('')
         self.Exchanges.clear()
         self.Expand.clear()
+        self.exchanges = self.phrases = None
 
     def command_add(self):
         self.append(self.result)
