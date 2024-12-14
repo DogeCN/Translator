@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QMessageBox, QMenu
 from PySide6.QtGui import QAction, QIcon
 from libs.stdout import print
 from libs.public import Publics
+from libs.config import Setting
 from libs.io import io, dialog
 from ._base._logic import LMainWindow
 from subprocess import Popen
@@ -16,8 +17,7 @@ class Action:
     _action = None
     def __call__(self):
         if not self._action:
-            self._action = QAction(self.tool.get_name(), self.tool.mw)
-            self._action.setStatusTip(self.tool.get_doc())
+            self._action = QAction(self.tool.mw.ui.menuTools)
             self._action.setVisible(self.visible)
             self._action.setEnabled(self.enabled)
             self._action.setShortcut(self.shortcut)
@@ -25,6 +25,8 @@ class Action:
                 self._action.setIcon(self.icon)
             self._action.triggered.connect(lambda *x,_t=self.tool:_t())
             self.tool.init()
+        self._action.setText(self.tool.get_name())
+        self._action.setStatusTip(self.tool.get_doc())
         return self._action
 
 class Menu:
@@ -38,18 +40,18 @@ class Menu:
         if not self._menu:
             for tool in self.tools:
                 tool.mw = self.tool.mw
-                tool.lang = self.tool.lang
-            self._menu = QMenu(self.tool.get_name(), self.tool.mw.ui.menuBar)
+            self._menu = QMenu(self.tool.mw.ui.menuTools)
             self._menu.setVisible(self.visible)
             self._menu.setEnabled(self.enabled)
-            for tool in self.tools:
-                action = tool.action()
-                action.setParent(self._menu)
-                if tool.type: action.setMenu(action)
-                else: self._menu.addAction(action)
             if self.icon:
                 self._menu.setIcon(self.icon)
             self._menu.hide()
+        for tool in self.tools:
+            action = tool.action()
+            action.setParent(self._menu)
+            if tool.type: action.setMenu(action)
+            else: self._menu.addAction(action)
+        self._menu.setTitle(self.tool.get_name())
         return self._menu
 
 class Message:
@@ -115,7 +117,7 @@ class Tr:
     tool = ... #type: Tool
     Tr = {}
     def __call__(self, key):
-        return self.Tr[key][self.tool.lang]
+        return self.Tr[key][Setting.Language]
 
 class Tool:
     mw = ... #type: LMainWindow
@@ -124,7 +126,6 @@ class Tool:
     name_zh = '新工具'
     doc = 'This is a new tool'
     doc_zh = '这是一个新的工具'
-    lang = 1
     entrance = None
     def __init__(self, type=0):
         self.type = type
@@ -145,7 +146,7 @@ class Tool:
         else: print(f"Can't find an entrance of the tool {self.name}", 'Red')
     #Get Info in Diffrent Languages
     def _get(self, attr) -> str:
-        return getattr(self, attr if self.lang else f'{attr}_zh')
+        return getattr(self, attr if Setting.Language else f'{attr}_zh')
     def get_name(self):
         return self._get('name')
     def get_doc(self):

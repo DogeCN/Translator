@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from requests import get
 from libs.io.base import load
 from libs.config import Setting
+from libs.stdout import print
 import info
 
 pool = ThreadPoolExecutor(3)
@@ -104,6 +105,7 @@ def getfile(name, dir):
     try: request = get(info.lurl_cn % name, stream=True, timeout=info.timeout)
     except: request = get(info.lurl % name, stream=True, timeout=info.timeout)
     with open(dir + name, 'wb') as f:
+        print(f'Downloading {name}', 'Blue')
         for chunk in request:
             f.write(chunk)
 
@@ -122,7 +124,6 @@ def _load_lexis():
 
 def load_lexis(callback):
     if _load_lexis():
-        print("Downloading ...")
         dlpool = ThreadPoolExecutor()
         csignal.lock()
         for lname in info.default_lexis:

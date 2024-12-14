@@ -108,7 +108,6 @@ class LMainWindow(QMainWindow):
         from libs.tool import Tools
         for tl in Tools:
             tl.mw = self
-            tl.lang = Setting.Language
             action = tl.action()
             if tl.type: self.ui.menuTools.addMenu(action)
             else: self.ui.menuTools.addAction(action)

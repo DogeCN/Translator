@@ -2,17 +2,21 @@ from difflib import SequenceMatcher
 from .api import api_translate
 from .dict import lexicons
 from ..config import Setting
-import info
+import info, time
 
 class Result:
     top = False
     match = False
     online = False
-    mp = 0
 
     def __init__(self, word:str='', value:list[str, list[str]]=[*['']*3, []]):
+        self.time = time.time()
         self.word = word
         self.value = value
+
+    @property
+    def past(self):
+        return (time.time() - self.time) // 86400
 
     @property
     def translation(self):

@@ -27,7 +27,7 @@ class LItem(BaseListWidgetItem):
         self.result = result
         self.word = result.word
         self.setToolTip(self.result.get_translation())
-        self.setBackground(QtGui.QColor(255, 100, 100, 30) if result.online else QtGui.QColor(100, 255, 255, 30))
+        self.setBackground(self.dcolor(255, 100, 100) if result.online else self.dcolor(100, 255, 255))
         self.update()
 
     @property
@@ -38,6 +38,11 @@ class LItem(BaseListWidgetItem):
     def top(self, value):
         self.result.top = value
         self.update()
+
+    def dcolor(self, r, g, b):
+        rate = self.result.past
+        rate = 200 if rate > 200 else rate
+        return QtGui.QColor(r, g, b, 30).darker(rate)
 
     def update(self):
         self.setText('*'+self.word if self.top else self.word)
@@ -75,7 +80,7 @@ class Bank(BaseListWidget):
         if word:
             word = word.lower()
             for i in self.items:
-                if i.word.startswith(word):
+                if i.word.startswith(word) and not i.result.top:
                     self.scrollToItem(i, TOP)
                     return
         self.scrollToItem(self.current, TOP)
@@ -179,12 +184,11 @@ class FItem(BaseListWidgetItem):
         else: self.results = []
     
     def save(self, silent=False):
-        if not self.saved:
-            if not silent and not self.exists():
-                self.save_as(self.file)
-            else:
-                io.save_vocabulary(self.results, self.file)
-                self.saved = True
+        if not silent and not self.exists():
+            self.save_as(self.file)
+        else:
+            io.save_vocabulary(self.results, self.file)
+            self.saved = True
     
     def save_as(self, file=None):
         if file:

@@ -26,7 +26,6 @@ def Get_New_File_Name(fn:str, ext:str='', exclusions:list[str]=[]):
             i += 1
         fn = fn%f'({i})'
     else: fn = fn%''
-    print('File Name: ' + fn)
     return fn
 
 class Clipboard:
