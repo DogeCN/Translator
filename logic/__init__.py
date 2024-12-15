@@ -51,7 +51,7 @@ class LMainWindow(QMainWindow):
         self.setting_ui.Lang.currentIndexChanged.connect(lambda:self.retrans(self.setting_ui.Lang.currentIndex()))
         self.setting_ui.buttonBox.accepted.connect(self.accept)
         self.setting_ui.buttonBox.rejected.connect(self.setting.hide)
-        self.setting_ui.Online.toggled.connect(lambda o: self.setting_ui.LexiconBox.setEnabled(not o) and setattr(Setting, 'Online', o) and Setting.dump())
+        self.setting_ui.Online.toggled.connect(self.set_online)
         self.setting_ui.LReload.clicked.connect(self.reload_lexis)
         self.setting_ui.viewLexicons.clicked.connect(lambda:Popen(f'explorer "{info.lexis_dir}"'))
         self.setting_ui.viewVocabulary.clicked.connect(lambda:(lambda f:self.setting_ui.Vocabulary.setText(f) if f else ...)(dialog.OpenFile(self.setting, Setting.getTr('default_file'), info.ext_all_voca, self.setting_ui.Vocabulary.text())))
@@ -157,6 +157,13 @@ class LMainWindow(QMainWindow):
                 sleep(0.05)
             else:
                 sleep(0.5)
+
+    def set_online(self, o):
+        if o: csignal.lock()
+        else: csignal.unlock()
+        self.setting_ui.LexiconBox.setEnabled(not o)
+        Setting.Online = o
+        Setting.dump()
 
     def closeEvent(self, evt:QEvent):
         if info.prog_running:

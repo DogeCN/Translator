@@ -16,7 +16,7 @@ class Result:
 
     @property
     def past(self):
-        return (time.time() - self.time) // 86400
+        return (time.time() - self.time) / 86400
 
     @property
     def translation(self):

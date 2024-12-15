@@ -3,6 +3,7 @@ from libs.debris import Get_New_File_Name
 from libs.translate import Result
 from libs.config import Setting
 from libs.io import io, dialog
+from math import log10
 import info
 
 TOP = QtWidgets.QAbstractItemView.ScrollHint.PositionAtTop
@@ -26,7 +27,7 @@ class LItem(BaseListWidgetItem):
         super().__init__(result.word)
         self.result = result
         self.word = result.word
-        self.setToolTip(self.result.get_translation())
+        self.setToolTip(result.get_translation())
         self.setBackground(self.dcolor(255, 100, 100) if result.online else self.dcolor(100, 255, 255))
         self.update()
 
@@ -40,9 +41,8 @@ class LItem(BaseListWidgetItem):
         self.update()
 
     def dcolor(self, r, g, b):
-        rate = self.result.past
-        rate = 200 if rate > 200 else rate
-        return QtGui.QColor(r, g, b, 30).darker(rate)
+        rate = round(max(255 - log10(self.result.past + 1) * 100, 1) / 5)
+        return QtGui.QColor(r, g, b, rate)
 
     def update(self):
         self.setText('*'+self.word if self.top else self.word)

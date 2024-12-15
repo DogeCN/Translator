@@ -8,7 +8,7 @@ def check_dir(dir):
 prog_name = 'Plume Lexicon'
 prog_name_cn = '羽词'
 author = 'DogeCN'
-version = 'v1.14.8'
+version = 'v1.14.9'
 prog_running = True
 data_dir = check_dir(os.getenv('AppData') + os.sep + prog_name + os.sep)
 lexis_dir_name = 'lexicons'

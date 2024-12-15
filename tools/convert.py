@@ -83,10 +83,10 @@ def process():
     path = section._sectPr.xpath('./w:cols')[0]
     path.set(qn('w:num'), str(columns))
     path.set(qn('w:space'), '20')
-    section.top_margin = Pt(10)
-    section.bottom_margin = Pt(10)
-    section.left_margin = Pt(20)
-    section.right_margin = Pt(20)
+    section.top_margin = \
+    section.bottom_margin = \
+    section.left_margin = \
+    section.right_margin = Pt(12)
     section.page_width = Pt(595)
     section.page_height = Pt(842)
     normal = document.styles['Normal']
