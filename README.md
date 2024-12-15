@@ -3,6 +3,7 @@
 
 ### Origin
  - **Former Name: Translator**
+ - The Lexicons Originated from [**ECDICT**](https://github.com/skywind3000/ECDICT)
  - In my quest of *4000 Essential Words* , I grappled with unfamiliar terms that were hard to comprehend and summarize. Hence, the idea for this app blossomed...
 
 ### Functions
