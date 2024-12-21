@@ -26,6 +26,8 @@ class LMain(Ui_MainWindow):
     _result = Result()
     signal = LSignal()
     lexi_thread = Thread()
+    add_locked = False
+    add_enabled = True
     exchanges = None
     expands = None
     parent = None
@@ -33,6 +35,12 @@ class LMain(Ui_MainWindow):
     tc = False
     hc = False
 
+    def set_add_enabled(self, e):
+        self.add_enabled = e
+        self.Add.setEnabled(False if self.add_locked else e)
+    def set_add_locked(self, l):
+        self.add_locked = l
+        self.Add.setEnabled(False if l else self.add_enabled)
     def load_lexis(self):
         self.lexi_thread = Thread(target=self._load_lexis)
         self.lexi_thread.start()
@@ -41,9 +49,10 @@ class LMain(Ui_MainWindow):
         self.signal.show_lexis_singal.emit()
     def save_all(self, silent=True):
         for item in self.Files.items: item.save(silent)
+    def check(self): self.set_add_locked(not len(self.Files.items))
     def append(self, result): self.Bank.append(result); self.Files.keep()
     def close(self): info.prog_running = False; self.parent.close()
-    def remove(self): self.Bank.remove(); self.Files.keep()
+    def clear(self): self.Bank.clear(); self.Files.keep()
     def top(self): self.Bank.top(); self.Files.keep()
     def set_expand(self, results): self.Expand.results = results
     def set_exchanges(self, results): self.Exchanges.results = results
@@ -59,21 +68,21 @@ class LMain(Ui_MainWindow):
     
     def connect_actions(self):
         #Menu Actions
-        self.actionNew.triggered.connect(lambda:self.Files.new())
-        self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current))
+        self.actionNew.triggered.connect(lambda:self.Files.new() or self.check())
+        self.actionReload.triggered.connect(lambda:(lambda item:item.load() or self._display_file(item) if item else self.load())(self.Files.current) or self.check())
         self.actionDict_Reload.triggered.connect(self.load_lexis)
-        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(dialog.OpenFiles(self.parent, Setting.getTr('load'), info.ext_all_voca)))
+        self.actionLoad.triggered.connect(lambda:(lambda f:self._display_file(self.Files.load(f)[0]) if f else ...)(dialog.OpenFiles(self.parent, Setting.getTr('load'), info.ext_all_voca)) or self.check())
         self.actionSave.triggered.connect(lambda:self.Files.current.save())
         self.actionSave_All.triggered.connect(lambda:self.save_all(False))
         self.actionSave_As.triggered.connect(lambda:self.Files.current.save_as())
-        self.actionRemove.triggered.connect(self.Files.remove)
-        self.actionClear.triggered.connect(self.Files.clear)
+        self.actionRemove.triggered.connect(lambda:self.Files.remove() or self.check())
+        self.actionClear.triggered.connect(lambda:self.Files.clear() or self.check())
         self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(lambda:webbrowser.open(info.repo_url))
         self.actionAboutQt.triggered.connect(lambda:QMessageBox.aboutQt(self.raw))
         #Button Actions
         self.Add.clicked.connect(self.command_add)
-        self.Delete.clicked.connect(self.remove)
+        self.Delete.clicked.connect(self.clear)
         self.Top.clicked.connect(self.top)
         #Text
         self.Word_Entry.textChanged.connect(self.text_change)
@@ -107,9 +116,9 @@ class LMain(Ui_MainWindow):
         self.Translated_text.setToolTip(result.get_definition())
         self.Phonetic.setText(result.phonetic)
         if word in self.Bank.words or not result:
-            self.Add.setEnabled(False)
+            self.set_add_enabled(False)
         else:
-            self.Add.setEnabled(True)
+            self.set_add_enabled(True)
 
     def correct(self, *evt):
         result = self.result
@@ -158,7 +167,7 @@ class LMain(Ui_MainWindow):
 
     def text_change(self):
         self.tc = True
-        self.Add.setEnabled(False)
+        self.set_add_enabled(False)
         self.Translated_text.setText('')
         self.Translated_text.setToolTip('')
         self.Phonetic.setText('')
@@ -170,7 +179,7 @@ class LMain(Ui_MainWindow):
     def command_add(self):
         self.append(self.result)
         self.Word_Entry.setText('')
-        self.Add.setEnabled(False)
+        self.set_add_enabled(False)
         self.Files.keep()
 
     def load(self, file:str|list[str]=None):

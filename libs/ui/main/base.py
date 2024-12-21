@@ -69,12 +69,6 @@ class Bank(BaseListWidget):
             item = LItem(result)
             self.addItem(item)
             self.scrollToItem(item, TOP)
-        
-    def remove(self):
-        for item in self.selections:
-            row = self.row(item)
-            self.takeItem(row)
-        self.update()
 
     def roll(self, word:str):
         if word:

@@ -15,24 +15,24 @@ class LSignal(QObject):
 class CSignal(QObject):
     sre = Signal(bool)
     count = 0
-    _lock = False
+    locked = False
 
     def add(self):
         self.count += 1
-        if self.count == 1 and not self._lock:
+        if self.count == 1 and not self.locked:
             self.sre.emit(False)
 
     def sub(self):
         self.count -= 1
-        if not self.count and not self._lock:
+        if not self.count and not self.locked:
             self.sre.emit(True)
     
     def lock(self):
-        self._lock = True
+        self.locked = True
         self.sre.emit(False)
     
     def unlock(self):
-        self._lock = False
+        self.locked = False
         if not self.count: self.sre.emit(True)
 
 csignal = CSignal()
