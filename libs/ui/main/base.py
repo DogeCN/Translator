@@ -184,19 +184,22 @@ class FItem(BaseListWidgetItem):
         else: self.results = []
     
     def save(self, silent=False):
-        if not silent and not self.exists():
-            self.save_as(self.file)
-        else:
+        if self.exists():
             io.save_vocabulary(self.results, self.file)
             self.saved = True
+        else:
+            if not silent:
+                self.save_as(self.file)
     
     def save_as(self, file=None):
         if file:
             file = dialog.SaveFile(None, Setting.getTr('save_as'), info.ext_all_voca, file)
+            if not file: return
             self.file = file
             self.saved = True
         else:
             file = dialog.SaveFile(None, Setting.getTr('save_as'), info.ext_all_voca)
+            if not file: return
         io.save_vocabulary(self.results, file)
 
 class Files(BaseListWidget):
@@ -232,7 +235,9 @@ class Files(BaseListWidget):
     def new(self, fn=None):
         if not fn:
             fn = Get_New_File_Name('untitled', info.ext_voca, self.names)
-        self.addItem(FItem(fn))
+        item = FItem(fn)
+        self.addItem(item)
+        self.current = item
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:

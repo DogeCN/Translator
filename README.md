@@ -18,4 +18,6 @@
  - ...
 
 ### Platform
- - **Windows 11** (*Please Apply the Dark Theme for a Better View*)
+ - Windows 8.1
+ - Windows 10
+ - **Windows 11** (*Best*)

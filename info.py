@@ -44,6 +44,7 @@ lurl = f'https://raw.githubusercontent.com/{author}/{repo_name}/refs/heads/main/
 lurl_cn = 'https://ghproxy.cn/' + lurl
 
 default_lexis = ['Base', 'Long', 'Phrase', 'Term']
+seps = [' ', '-']
 
 Tr = {
     'title' : (prog_name_cn, prog_name),

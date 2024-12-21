@@ -1,11 +1,15 @@
+from PySide6.QtWidgets import QMainWindow
 from pywinstyles import apply_style
 import win32clipboard, platform, ctypes, os
 
-def Set_Acrylic(window):
-    try: windows_ver = int(platform.release())
-    except: return
-    if windows_ver > 10:
+def Set_Acrylic(window:QMainWindow):
+    try:
+        apply_style(window, 'dark')
+        window.setStyleSheet('color: white; background-color: rgb(30, 30, 30);')
+        assert int(platform.release()) > 10
         apply_style(window, 'acrylic')
+        window.setStyleSheet('color: white; background-color: transparent;')
+    except: ...
 
 def Get_Language():
     dll_h = ctypes.windll.kernel32

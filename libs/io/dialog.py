@@ -8,22 +8,22 @@ def rdir(f):
         Publics['default_path'] = rd
     return f
 
-def OpenDir(parent=None, title='', dir=None):
+def OpenDir(parent=None, title='', dir=None) -> str:
     if not dir: dir = Publics['default_path']
     d = QFile.getExistingDirectory(parent, title, dir)
     return rdir(d)
 
-def OpenFile(parent=None, title='', type=..., dir=None):
+def OpenFile(parent=None, title='', type=..., dir=None) -> str:
     if not dir: dir = Publics['default_path']
     f, _ = QFile.getOpenFileName(parent, title, dir, type)
     return rdir(f)
 
-def OpenFiles(parent=None, title=None, type=..., dir=None):
+def OpenFiles(parent=None, title=None, type=..., dir=None) -> list[str]:
     if not dir: dir = Publics['default_path']
     f, _ = QFile.getOpenFileNames(parent, title, dir, type)
     return rdir(f)
 
-def SaveFile(parent=None, title='', type=..., dir=None):
+def SaveFile(parent=None, title='', type=..., dir=None) -> str:
     if not dir: dir = Publics['default_path']
     f, _ = QFile.getSaveFileName(parent, title, dir, type)
     return rdir(f)

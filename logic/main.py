@@ -27,7 +27,7 @@ class LMain(Ui_MainWindow):
     signal = LSignal()
     lexi_thread = Thread()
     exchanges = None
-    phrases = None
+    expands = None
     parent = None
     raw = None
     tc = False
@@ -87,8 +87,8 @@ class LMain(Ui_MainWindow):
         #Signal
         self.signal.set_result_singal.connect(self.set_result)
         self.signal.callback_singal.connect(lambda:QMessageBox.warning(self.raw, Setting.getTr('warning'), Setting.getTr('translate_function_unavailable')))
-        self.signal.exchange_singal.connect(self.set_exchanges)
-        self.signal.expand_singal.connect(self.set_expand)
+        self.signal.exchange_singal.connect(lambda r: self.set_exchanges(r) if not self.tc else ...)
+        self.signal.expand_singal.connect(lambda r: self.set_expand(r) if not self.tc else ...)
 
     def setShotcuts(self):
         self.Add.setShortcut(Setting.Key_Add)
@@ -128,18 +128,18 @@ class LMain(Ui_MainWindow):
             self.Phonetic.setToolTip(info.speech_hint % Setting.getTr('speech_hint'))
             self.hc = True
             self.exchanges = result.exchanges
-            self.phrases = result.phrases
+            self.expands = result.expands
             self.result = result
 
-    def _handle(self, generator):
+    def _handle(self, generator, emit):
         if generator:
             results = []
             for r in generator:
                 results.append(r)
                 if self.hc:
                     self.hc = False
-                    return
-            return results
+                    return True
+            emit(results)
 
     def handle(self):
         ticker = Ticker()
@@ -148,14 +148,10 @@ class LMain(Ui_MainWindow):
                 if self.hc or ticker:
                     self.hc = False
                     if self.Exchanges.height():
-                        exchanges = self._handle(self.exchanges)
-                        if exchanges is not None:
-                            self.signal.exchange_singal.emit(exchanges)
-                            self.exchanges = None
-                    phrases = self._handle(self.phrases)
-                    if phrases is not None:
-                        self.signal.expand_singal.emit(phrases)
-                        self.phrases = None
+                        if self._handle(self.exchanges, self.signal.exchange_singal.emit): continue
+                        self.exchanges = None
+                    if self._handle(self.expands, self.signal.expand_singal.emit): continue
+                    self.expands = None
                 sleep(0.05)
             else:
                 sleep(0.5)
@@ -169,7 +165,7 @@ class LMain(Ui_MainWindow):
         self.Phonetic.setToolTip('')
         self.Exchanges.clear()
         self.Expand.clear()
-        self.exchanges = self.phrases = None
+        self.exchanges = self.expands = None
 
     def command_add(self):
         self.append(self.result)

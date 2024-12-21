@@ -49,19 +49,24 @@ class Result:
             if result:
                 yield result
 
-    @property
-    def phrases(self):
-        if ' ' in self.word:
-            for wp in set(self.word.split(' ')):
+    def _expands(self, sep):
+        if sep in self.word:
+            for wp in set(self.word.split(sep)):
                 result = translate(wp)
                 if result:
                     yield result
         for lexicon in lexicons:
             if not lexicon.enabled: continue
             for wp in lexicon:
-                if (' ' in self.word and self.word != wp and self.word in wp) \
-                    or (' ' in wp and self.word in wp.split(' ')):
+                if (sep in self.word and self.word != wp and self.word in wp) \
+                    or (sep in wp and self.word in wp.split(sep)):
                     yield Result(wp, lexicon[wp])
+
+    @property
+    def expands(self):
+        for sep in info.seps:
+            for result in self._expands(sep):
+                yield result
 
     @property
     def phonetic(self):
