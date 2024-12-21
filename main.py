@@ -37,10 +37,6 @@ if info.debug:
     main()
 else:
     register()
-    for retry in range(0, info.retries+1):
-        try: main()
-        except Exception as e:
-            print(f"Error: {''.join(traceback.format_exception(e))}", 'Red', 'Bold')
-            time.sleep(1)
-            if retry < info.retries:
-                print(f'Restarting... ({retry+1}/{info.retries})', 'Yellow', 'Bold')
+    try: main()
+    except Exception as e:
+        print(f"Error: {''.join(traceback.format_exception(e))}", 'Red', 'Bold')

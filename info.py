@@ -22,7 +22,6 @@ ext_all_voca = '*' + ext_voca
 ext_self_exe = '.exe'
 debug_file = data_dir + '.DEBUG'
 debug = os.path.exists(debug_file)
-retries = 3
 timeout = 3
 running = data_dir + '.running'
 running_sign = ' '

@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDialog, QMenu, QMainWindow, QSystemTrayIcon, QStyleFactory
+from PySide6.QtWidgets import QApplication, QDialog, QMenu, QMainWindow, QSystemTrayIcon
 from PySide6.QtCore import QTimer, QEvent
 from libs.translate import trans
 from libs.translate.dict import LexiBox, csignal
@@ -172,4 +172,4 @@ class LMainWindow(QMainWindow):
         else:
             if Setting.Auto_save:
                 self.ui.save_all(False)
-            exit()
+            QApplication.exit()
